@@ -1,0 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@100;400;700;900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+}
+header .logo-container {
+  height: 50px;
+  background-color: #151515;
+  display: flex;
+  justify-content: center;
+}
+header .logo-container h1 {
+  color: #ffffff;
+  font-family: "Bangers", cursive;
+  background-color: #ed1d23;
+  padding: 5px 15px;
+  font-size: 48px;
+  display: flex;
+  align-items: center;
+}
+header .hero-image {
+  height: 400px;
+  margin-bottom: 60px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("img/banner.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/*# sourceMappingURL=style.css.map */

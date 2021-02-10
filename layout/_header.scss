@@ -1,0 +1,29 @@
+header {
+  display: flex;
+  flex-direction: column;
+  
+  .logo-container {
+    height: 50px;
+    background-color: $main-color;
+    display: flex;
+    justify-content: center;
+
+    h1 {
+      color: $secondary-detail-color;
+      font-family: $logo-typograhy;
+      background-color: $detail-color;
+      padding: 5px 15px;
+      font-size: 48px;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .hero-image {
+    height: 400px;
+    margin-bottom: 60px;
+    background-image: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)), url("img/banner.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
