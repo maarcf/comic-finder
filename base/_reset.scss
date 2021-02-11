@@ -1,9 +1,12 @@
-* {
-  margin: 0;
-  padding: 0;
-}
-
 $main-color: #151515;
 $secondary-color: #757575;
 $detail-color: #ed1d23;
 $secondary-detail-color: #ffffff;
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: $text-typograhy;
+  outline-color: $detail-color;
+}
+

@@ -1,0 +1,27 @@
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $secondary-detail-color;
+  background-color: $main-color;
+  padding: 35px;
+
+  .contact-links {
+    width: 100px;
+    padding-top: 10px;
+    @extend %flex-space-between-center;
+
+    a {
+      padding: 5px;
+
+      &:hover, &:visited {
+        color: $detail-color;
+      }
+
+      i {
+        color: $secondary-detail-color;
+        font-size: 22px;
+      }
+    }
+  }
+}
