@@ -11,6 +11,7 @@
   <title>Marvel Comics</title>
 </head>
 <body>
+
   <header>
     <div class="logo-container">
       <h1 class="logo-title">ADA COMICS</h1>
@@ -23,6 +24,44 @@
   </header>
 
   <main>
+    <h2>Búsqueda</h2>
+    <form id="search-form" class="search-form">      
+      <fieldset class="fieldset input-text">
+        <label for="search-input">
+          <input type="text" placeholder="Ingresá tu búsqueda" name="search-input" id="search-input"/>
+          <div class="icon-container">
+            <i class="fas fa-search" aria-hidden="true"></i>
+          </div>
+        </label>
+      </fieldset>
+
+      <fieldset class="fieldset selects-options">
+        <label for="search-type">
+          TIPO
+          <select name="search-type" id="search-type">
+            <option value="comics" selected>COMICS</option>
+            <option value="characthers">PERSONAJES</option>
+          </select>
+        </label>
+
+        <label for="search-sort">
+          ORDEN
+          <select name="search-sort" id="search-sort">
+            <option value="title" selected>A - Z</option>
+            <option value="-title">Z - A</option>
+            <option value="-foc-date">Más nuevos</option>   
+            <option value="foc-date">Más viejos</option> 
+          </select>
+        </label>
+      </fieldset>
+
+      <button type="button" id="search-button" class="search-button">BUSCAR</button>
+    </form>
+
+    <h2>Resultados</h2>
+    <p id="total-results">1500 RESULTADOS</p>
+
+    
 
   </main>
 
@@ -34,6 +73,7 @@
       <a href="mailto:marr.cairo@gmail.com" target="_blank" aria-label="E-mail de Mariana"><i class="fas fa-envelope" aria-hidden="true"></i></a>
     </div>
   </footer>
+
 
   <script src="main.js"></script>
 </body>

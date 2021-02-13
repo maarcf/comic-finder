@@ -1,4 +1,11 @@
 main {
   margin: 60px 75px 80px;
-  max-width: 1500px;
+
+  h2 {
+    margin-bottom: 30px;
+  }
+
+  p {
+    @extend %secondary-typography-style;
+  }
 }

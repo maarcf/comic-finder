@@ -1,0 +1,53 @@
+.search-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 60px;
+
+  
+  .fieldset {
+    border: none;
+  }
+
+  .input-text {
+    flex: 4;
+
+    label {
+      position: relative;
+
+      input[type=text] {
+        border: none;
+        border-bottom: 2px solid $main-color;
+        padding: 8px 35px;
+        font-size: 22px;
+        width: 80%;
+      }
+
+      .icon-container {
+        position: absolute;
+        top: 0;
+        left: 8px;
+      }
+    }
+  }
+
+  .selects-options {
+    flex: 2;
+  
+    label {
+      @extend %secondary-typography-style;
+      margin-right: 10px;
+
+      select {
+        border: none;
+        margin-left: 5px;
+        font-size: 16px;
+        font-weight: 900;
+      }
+    }
+  }
+
+  .search-button {
+    @include button;
+  }
+}

@@ -3,3 +3,9 @@
   justify-content: space-between;
   align-items: center;
 }
+
+%secondary-typography-style {
+  font-size: 14px;
+  color: $secondary-color;
+  font-weight: 700;
+}

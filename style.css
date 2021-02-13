@@ -1,24 +1,33 @@
 @import url("https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@100;400;700;900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  color: #151515;
+  font-family: "Roboto", sans-serif;
+  outline-color: #ed1d23;
+}
+
 footer .contact-links {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  font-family: "Roboto", sans-serif;
-  outline-color: #ed1d23;
+.search-form .selects-options label, main p {
+  font-size: 14px;
+  color: #757575;
+  font-weight: 700;
 }
 
 footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #ffffff;
   background-color: #151515;
   padding: 35px;
+}
+footer p {
+  color: #ffffff;
 }
 footer .contact-links {
   width: 100px;
@@ -63,7 +72,60 @@ header .hero-image {
 
 main {
   margin: 60px 75px 80px;
-  max-width: 1500px;
+}
+main h2 {
+  margin-bottom: 30px;
+}
+.search-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 60px;
+}
+.search-form .fieldset {
+  border: none;
+}
+.search-form .input-text {
+  flex: 4;
+}
+.search-form .input-text label {
+  position: relative;
+}
+.search-form .input-text label input[type=text] {
+  border: none;
+  border-bottom: 2px solid #151515;
+  padding: 8px 35px;
+  font-size: 22px;
+  width: 80%;
+}
+.search-form .input-text label .icon-container {
+  position: absolute;
+  top: 0;
+  left: 8px;
+}
+.search-form .selects-options {
+  flex: 2;
+}
+.search-form .selects-options label {
+  margin-right: 10px;
+}
+.search-form .selects-options label select {
+  border: none;
+  margin-left: 5px;
+  font-size: 16px;
+  font-weight: 900;
+}
+.search-form .search-button {
+  padding: 10px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #151515;
+  border: none;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.search-form .search-button:hover {
+  background-color: #ed1d23;
 }
 
 /*# sourceMappingURL=style.css.map */
