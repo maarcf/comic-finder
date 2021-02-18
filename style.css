@@ -7,7 +7,7 @@
   outline-color: #ed1d23;
 }
 
-footer .contact-links {
+.results, footer .contact-links {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -74,19 +74,55 @@ main {
   margin: 60px 75px 80px;
 }
 main h2 {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
+.results {
+  margin: 50px 0;
+  flex-wrap: wrap;
+}
+
+.comic-card {
+  max-width: 215px;
+  margin: 0 10px 40px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.comic-card .comic-img-container {
+  width: 210px;
+  margin-bottom: 20px;
+}
+.comic-card .comic-img-container .comic-img {
+  width: 100%;
+  height: auto;
+  transition: all 0.2s;
+  transform: translateY(0);
+  box-shadow: 0 26px 24px -16px rgba(0, 0, 0, 0.4);
+}
+.comic-card .comic-title {
+  padding: 10px 10px 30px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.comic-card:hover .comic-img-container .comic-img {
+  transform: translateY(-10px);
+}
+.comic-card:hover .comic-title {
+  color: #ed1d23;
+}
+
 .search-form {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
   margin-bottom: 60px;
 }
 .search-form .fieldset {
   border: none;
 }
 .search-form .input-text {
-  flex: 4;
+  margin-bottom: 10px;
 }
 .search-form .input-text label {
   position: relative;
@@ -96,7 +132,12 @@ main h2 {
   border-bottom: 2px solid #151515;
   padding: 8px 35px;
   font-size: 22px;
-  width: 80%;
+  width: 550px;
+}
+@media (max-width: 900px) {
+  .search-form .input-text label input[type=text] {
+    width: 420px;
+  }
 }
 .search-form .input-text label .icon-container {
   position: absolute;
@@ -104,7 +145,7 @@ main h2 {
   left: 8px;
 }
 .search-form .selects-options {
-  flex: 2;
+  margin-bottom: 10px;
 }
 .search-form .selects-options label {
   margin-right: 10px;

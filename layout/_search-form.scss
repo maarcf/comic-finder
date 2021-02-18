@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
   margin-bottom: 60px;
 
   
@@ -10,7 +11,7 @@
   }
 
   .input-text {
-    flex: 4;
+    margin-bottom: 10px;
 
     label {
       position: relative;
@@ -20,7 +21,11 @@
         border-bottom: 2px solid $main-color;
         padding: 8px 35px;
         font-size: 22px;
-        width: 80%;
+        width: 550px;
+
+        @media (max-width: 900px) {
+          width: 420px;
+        }
       }
 
       .icon-container {
@@ -32,7 +37,7 @@
   }
 
   .selects-options {
-    flex: 2;
+    margin-bottom: 10px;
   
     label {
       @extend %secondary-typography-style;
