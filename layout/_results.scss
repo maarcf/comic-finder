@@ -1,6 +1,7 @@
 .results {
   margin: 50px 0;
-  @extend %flex-space-between-center;
+  display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 

@@ -7,7 +7,7 @@
   outline-color: #ed1d23;
 }
 
-.results, footer .contact-links {
+footer .contact-links {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -72,12 +72,22 @@ header .hero-image {
 
 main {
   margin: 60px 75px 80px;
+  position: relative;
 }
 main h2 {
   margin-bottom: 20px;
 }
+.loader {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+}
+
 .results {
   margin: 50px 0;
+  display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 
