@@ -1,14 +1,24 @@
+// DOM Variables // 
+const mainSection = document.querySelector('#results');
+const totalResults = document.querySelector('#total-results');
+const loaderOverlay = document.querySelector('.overlay');
+
+
+
+// JS Variables//
 const baseUrl = 'https://gateway.marvel.com/v1/public/';
 const apiKey = '08b7060939db82c5ed50966d57a02ac5';
 
-const mainSection = document.querySelector('#results');
-const totalResults = document.querySelector('#total-results');
-console.log(totalResults);
+// Loader //
+const showLoader = () => loaderOverlay.classList.remove('hidden');
+const hideLoader = () => loaderOverlay.classList.add('hidden');
+
 
 const drawComics = () => {
   fetch(`${baseUrl}/comics?apikey=${apiKey}&offset=0&orderBy=title`)
   .then(res => res.json())
   .then(data => {
+    
     console.log(data)
     let comics = data.data.results;
     let total = data.data.total;
@@ -25,8 +35,10 @@ const drawComics = () => {
         <h3 class="comic-title">${comic.title}</h3>
       </article>`
     })
-
+    hideLoader()
+    
   })
 }
 
-drawComics()
+showLoader();
+drawComics();

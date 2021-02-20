@@ -19,6 +19,49 @@ footer .contact-links {
   font-weight: 700;
 }
 
+.overlay {
+  background-color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.overlay .loader {
+  border: 8px solid transparent;
+  border-top: 8px solid #ed1d23;
+  border-bottom: 8px solid #ed1d23;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1.5s linear infinite;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  padding: 10px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #151515;
+  border: none;
+  cursor: pointer;
+  transition: 0.5s;
+}
+button:hover {
+  background-color: #ed1d23;
+}
+
 footer {
   display: flex;
   flex-direction: column;
@@ -77,13 +120,6 @@ main {
 main h2 {
   margin-bottom: 20px;
 }
-.loader {
-  background-color: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  bottom: 0;
-}
-
 .results {
   margin: 50px 0;
   display: flex;
@@ -165,18 +201,6 @@ main h2 {
   margin-left: 5px;
   font-size: 16px;
   font-weight: 900;
-}
-.search-form .search-button {
-  padding: 10px;
-  font-size: 16px;
-  color: #ffffff;
-  background-color: #151515;
-  border: none;
-  cursor: pointer;
-  transition: 0.5s;
-}
-.search-form .search-button:hover {
-  background-color: #ed1d23;
 }
 
 /*# sourceMappingURL=style.css.map */
