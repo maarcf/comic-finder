@@ -55,7 +55,7 @@
         </label>
       </fieldset>
 
-      <button type="button" id="search-button" class="search-button">BUSCAR</button>
+      <button type="button" id="search-button" class="search-button button">BUSCAR</button>
     </form>
 
     <h2>Resultados</h2>
@@ -65,8 +65,33 @@
 
     </section>
 
+    <nav class="pagination-container">
+      <ul>
+        <li>
+          <button id="first-page" class="pagination button" aria-label="Ir a la primera página">
+            <i class="fas fa-angle-double-left" aria-hidden="true"></i>
+          </button>
+        </li>
+        <li>
+          <button id="previous-page" class="pagination button" aria-label="Ir a la página anterior">
+            <i class="fas fa-angle-left" aria-hidden="true"></i>
+          </button>
+        </li>
+        <li>
+          <button id="next-page" class="pagination button" aria-label="Ir a la página siguiente">
+            <i class="fas fa-angle-right" aria-hidden="true"></i>
+          </button>
+        </li>
+        <li>
+          <button id="last-page" class="pagination button" aria-label="Ir a la última página">
+            <i class="fas fa-angle-double-right" aria-hidden="true"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
     <div class="overlay hidden">
-      <div class="loader"></div>
+      <div class="loader" role="progressbar"  aria-label="Cargando..." aria-labelledby="results"></div>
     </div>
     
 

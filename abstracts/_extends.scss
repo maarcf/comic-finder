@@ -9,3 +9,14 @@
   color: $secondary-color;
   font-weight: 700;
 }
+
+%flex-center-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+%flex-column {
+  display: flex;
+  flex-direction: column;
+}

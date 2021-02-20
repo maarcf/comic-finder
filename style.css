@@ -7,7 +7,7 @@
   outline-color: #ed1d23;
 }
 
-footer .contact-links {
+.pagination-container ul, footer .contact-links {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,6 +19,17 @@ footer .contact-links {
   font-weight: 700;
 }
 
+.pagination-container ul li .pagination, .overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comic-card, main, header, footer {
+  display: flex;
+  flex-direction: column;
+}
+
 .overlay {
   background-color: rgba(255, 255, 255, 0.5);
   position: absolute;
@@ -26,9 +37,6 @@ footer .contact-links {
   bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .overlay .loader {
   border: 8px solid transparent;
@@ -49,7 +57,7 @@ footer .contact-links {
   display: none;
 }
 
-button {
+.button {
   padding: 10px;
   font-size: 16px;
   color: #ffffff;
@@ -58,13 +66,14 @@ button {
   cursor: pointer;
   transition: 0.5s;
 }
-button:hover {
+.button:hover {
   background-color: #ed1d23;
+}
+.button:disabled {
+  pointer-events: none;
 }
 
 footer {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   background-color: #151515;
   padding: 35px;
@@ -87,10 +96,6 @@ footer .contact-links a i {
   font-size: 22px;
 }
 
-header {
-  display: flex;
-  flex-direction: column;
-}
 header .logo-container {
   height: 50px;
   background-color: #151515;
@@ -131,8 +136,6 @@ main h2 {
   max-width: 215px;
   margin: 0 10px 40px;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
 }
 .comic-card .comic-img-container {
   width: 210px;
@@ -155,6 +158,26 @@ main h2 {
 }
 .comic-card:hover .comic-title {
   color: #ed1d23;
+}
+
+.pagination-container {
+  display: flex;
+  width: 200px;
+  align-self: center;
+}
+.pagination-container ul {
+  width: 100%;
+}
+.pagination-container ul li {
+  list-style: none;
+}
+.pagination-container ul li .pagination {
+  width: 35px;
+  height: 35px;
+  font-size: 24px;
+}
+.pagination-container ul li .pagination i {
+  color: #ffffff;
 }
 
 .search-form {

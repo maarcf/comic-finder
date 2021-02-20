@@ -1,6 +1,5 @@
 footer {
-  display: flex;
-  flex-direction: column;
+  @extend %flex-column;
   align-items: center;
   background-color: $main-color;
   padding: 35px;

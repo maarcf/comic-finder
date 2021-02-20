@@ -1,6 +1,5 @@
 header {
-  display: flex;
-  flex-direction: column;
+  @extend %flex-column;
   
   .logo-container {
     height: 50px;
