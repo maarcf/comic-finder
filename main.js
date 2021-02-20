@@ -12,27 +12,28 @@ const baseUrl = 'https://gateway.marvel.com/v1/public/';
 const apiKey = '08b7060939db82c5ed50966d57a02ac5';
 
 // Loader //
-const showLoader = () => {
-  loaderOverlay.children[0].setAttribute('aria-hidden', 'false');
-  loaderOverlay.classList.remove('hidden');
-  mainSection.setAttribute('aria-busy', 'true')
-}
-const hideLoader = () => {
-  loaderOverlay.children[0].setAttribute('aria-hidden', 'true');
-  loaderOverlay.classList.add('hidden');
-  mainSection.setAttribute('aria-busy', 'false')
-}
+const showLoader = (overlay, section) => {
+  overlay.children[0].setAttribute('aria-hidden', 'false');
+  overlay.classList.remove('hidden');
+  section.setAttribute('aria-busy', 'true');
+};
+
+const hideLoader = (overlay, section) => {
+  overlay.children[0].setAttribute('aria-hidden', 'true');
+  overlay.classList.add('hidden');
+  section.setAttribute('aria-busy', 'false');
+};
 
 // Disabled and Enabled //
 const isDisabled = button => {
   button.disabled = true;
   button.children[0].style.color = '#757575';
-}
+};
 
 const isEnabled = button => {
   button.disabled = false;
   button.children[0].style.color = '#fff';
-}
+};
 
 const drawComics = () => {
   fetch(`${baseUrl}/comics?apikey=${apiKey}&offset=0&orderBy=title`)
@@ -55,11 +56,11 @@ const drawComics = () => {
         <h3 class="comic-title">${comic.title}</h3>
       </article>`
     })
-    hideLoader();
+    hideLoader(loaderOverlay, mainSection);
     isDisabled(firstPageButton);
     isDisabled(previousPageButton);
   })
 }
 
-showLoader();
+showLoader(loaderOverlay, mainSection);
 drawComics();
