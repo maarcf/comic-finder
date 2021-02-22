@@ -21,10 +21,10 @@
         border-bottom: 2px solid $main-color;
         padding: 8px 35px;
         font-size: 22px;
-        width: 550px;
+        width: 450px;
 
-        @media (max-width: 900px) {
-          width: 420px;
+        @media (max-width: $medium-breakpoint) {
+          width: 80%;
         }
       }
 
@@ -33,6 +33,10 @@
         top: 0;
         left: 8px;
       }
+    }
+
+    @media (max-width: $medium-breakpoint) {
+      width: 100%;
     }
   }
 

@@ -51,7 +51,7 @@ const drawComics = () => {
       mainSection.innerHTML += `
       <article class="comic-card" data-comic-id="${comic.id}">
         <div class="comic-img-container">
-          <img class="comic-img" src="${comic.thumbnail.path}.${comic.thumbnail.extension}" alt="${comic.title}" />
+          <img class="comic-img" src="${comic.thumbnail.path}.${comic.thumbnail.extension}" alt="Portada del Comic: ${comic.title}" />
         </div>
         <h3 class="comic-title">${comic.title}</h3>
       </article>`

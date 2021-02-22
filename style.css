@@ -1,12 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@100;400;700;900&display=swap");
-* {
-  margin: 0;
-  padding: 0;
-  color: #151515;
-  font-family: "Roboto", sans-serif;
-  outline-color: #ed1d23;
-}
-
 .pagination-container ul, footer .contact-links {
   display: flex;
   justify-content: space-between;
@@ -25,9 +17,17 @@
   align-items: center;
 }
 
-.comic-card, main, header, footer {
+main, header, footer, .comic-card {
   display: flex;
   flex-direction: column;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  color: #151515;
+  font-family: "Roboto", sans-serif;
+  outline-color: #ed1d23;
 }
 
 .overlay {
@@ -71,6 +71,44 @@
 }
 .button:disabled {
   pointer-events: none;
+}
+
+.comic-card {
+  width: calc(100% / 5 - 2 * 10px);
+  margin: 0 10px 40px;
+  cursor: pointer;
+}
+.comic-card .comic-img-container {
+  margin-bottom: 20px;
+}
+.comic-card .comic-img-container .comic-img {
+  width: 100%;
+  height: auto;
+  transition: all 0.2s;
+  transform: translateY(0);
+  box-shadow: 0 26px 24px -16px rgba(0, 0, 0, 0.4);
+}
+.comic-card .comic-title {
+  padding: 10px 10px 30px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.comic-card:hover .comic-img-container .comic-img {
+  transform: translateY(-10px);
+}
+.comic-card:hover .comic-title {
+  color: #ed1d23;
+}
+@media (max-width: 660px) {
+  .comic-card {
+    width: calc(100% / 3 - 2 * 10px);
+  }
+}
+@media (max-width: 360px) {
+  .comic-card {
+    flex: 1;
+    width: 250px;
+  }
 }
 
 footer {
@@ -132,34 +170,6 @@ main h2 {
   flex-wrap: wrap;
 }
 
-.comic-card {
-  max-width: 215px;
-  margin: 0 10px 40px;
-  cursor: pointer;
-}
-.comic-card .comic-img-container {
-  width: 210px;
-  margin-bottom: 20px;
-}
-.comic-card .comic-img-container .comic-img {
-  width: 100%;
-  height: auto;
-  transition: all 0.2s;
-  transform: translateY(0);
-  box-shadow: 0 26px 24px -16px rgba(0, 0, 0, 0.4);
-}
-.comic-card .comic-title {
-  padding: 10px 10px 30px;
-  font-size: 14px;
-  transition: all 0.2s;
-}
-.comic-card:hover .comic-img-container .comic-img {
-  transform: translateY(-10px);
-}
-.comic-card:hover .comic-title {
-  color: #ed1d23;
-}
-
 .pagination-container {
   display: flex;
   width: 200px;
@@ -201,17 +211,22 @@ main h2 {
   border-bottom: 2px solid #151515;
   padding: 8px 35px;
   font-size: 22px;
-  width: 550px;
+  width: 450px;
 }
-@media (max-width: 900px) {
+@media (max-width: 660px) {
   .search-form .input-text label input[type=text] {
-    width: 420px;
+    width: 100%;
   }
 }
 .search-form .input-text label .icon-container {
   position: absolute;
   top: 0;
   left: 8px;
+}
+@media (max-width: 660px) {
+  .search-form .input-text {
+    width: 100%;
+  }
 }
 .search-form .selects-options {
   margin-bottom: 10px;
