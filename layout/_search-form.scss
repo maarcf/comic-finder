@@ -1,8 +1,7 @@
 .search-form {
-  display: flex;
+  @extend %flex-wrap;
   justify-content: space-between;
   align-items: flex-end;
-  flex-wrap: wrap;
   margin-bottom: 60px;
 
   

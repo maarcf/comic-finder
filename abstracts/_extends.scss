@@ -5,7 +5,7 @@
 }
 
 %secondary-typography-style {
-  font-size: 14px;
+  font-size: $small-font-size;
   color: $secondary-color;
   font-weight: 700;
 }
@@ -19,4 +19,9 @@
 %flex-column {
   display: flex;
   flex-direction: column;
+}
+
+%flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
 }

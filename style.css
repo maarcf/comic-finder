@@ -17,9 +17,14 @@
   align-items: center;
 }
 
-main, header, footer, .comic-card {
+main, header, footer, .character-card, .comic-card {
   display: flex;
   flex-direction: column;
+}
+
+.search-form, .results {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 * {
@@ -83,7 +88,7 @@ main, header, footer, .comic-card {
 }
 .comic-card .comic-img-container .comic-img {
   width: 100%;
-  height: auto;
+  height: 100%;
   transition: all 0.2s;
   transform: translateY(0);
   box-shadow: 0 26px 24px -16px rgba(0, 0, 0, 0.4);
@@ -106,7 +111,56 @@ main, header, footer, .comic-card {
 }
 @media (max-width: 360px) {
   .comic-card {
-    flex: 1;
+    width: 250px;
+  }
+}
+
+.character-card {
+  width: calc(100% / 5 - 2 * 10px);
+  margin: 0 10px 40px;
+  cursor: pointer;
+}
+.character-card .character-img-container {
+  border-bottom: 4px solid #ed1d23;
+  overflow: hidden;
+}
+.character-card .character-img-container .character-img {
+  width: 100%;
+  height: 100%;
+  transition: all 0.2s;
+  transform: scale(1);
+}
+.character-card .character-name {
+  padding: 15px 20px 15px;
+  font-size: 14px;
+  transition: all 0.2s;
+  height: 70px;
+  background-color: #151515;
+  color: #ffffff;
+}
+.character-card:hover .character-img-container .character-img {
+  transform: scale(1.1);
+}
+.character-card:hover .character-name {
+  background-color: #ed1d23;
+}
+@media (min-width: 1024px) {
+  .character-card {
+    width: calc(100% / 6 - 2 * 10px);
+  }
+}
+@media (max-width: 880px) {
+  .character-card {
+    width: calc(100% / 4 - 2 * 10px);
+  }
+}
+@media (max-width: 660px) {
+  .character-card {
+    width: calc(100% / 2 - 2 * 10px);
+  }
+}
+@media (max-width: 360px) {
+  .character-card {
     width: 250px;
   }
 }
@@ -165,9 +219,6 @@ main h2 {
 }
 .results {
   margin: 50px 0;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
 }
 
 .pagination-container {
@@ -191,10 +242,8 @@ main h2 {
 }
 
 .search-form {
-  display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  flex-wrap: wrap;
   margin-bottom: 60px;
 }
 .search-form .fieldset {
@@ -215,7 +264,7 @@ main h2 {
 }
 @media (max-width: 660px) {
   .search-form .input-text label input[type=text] {
-    width: 100%;
+    width: 80%;
   }
 }
 .search-form .input-text label .icon-container {

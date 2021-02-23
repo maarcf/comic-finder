@@ -2,3 +2,22 @@
   width: $width;
   height: $height;  
 }
+
+@mixin card-container ($width) {
+  @extend %flex-column;
+  width: $width;
+  margin: $card-margin;
+  cursor: pointer;
+}
+
+@mixin card-img ($width, $height, $transform) {
+  @include size(100%, 100%);
+  transition: $card-transition;
+  transform: $transform;
+}
+
+@mixin card-text ($ptop, $prl, $pbottom){
+  padding: $ptop $prl $pbottom;
+  font-size: $small-font-size;
+  transition: $card-transition;
+}

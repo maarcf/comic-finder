@@ -10,6 +10,7 @@ const lastPageButton = document.querySelector('#last-page');
 // JS Variables//
 const baseUrl = 'https://gateway.marvel.com/v1/public/';
 const apiKey = '08b7060939db82c5ed50966d57a02ac5';
+const imageSize = '/portrait_uncanny';
 
 // Loader //
 const showLoader = (overlay, section) => {
@@ -51,7 +52,7 @@ const drawComics = () => {
       mainSection.innerHTML += `
       <article class="comic-card" data-comic-id="${comic.id}">
         <div class="comic-img-container">
-          <img class="comic-img" src="${comic.thumbnail.path}.${comic.thumbnail.extension}" alt="Portada del Comic: ${comic.title}" />
+          <img class="comic-img" src="${comic.thumbnail.path + imageSize}.${comic.thumbnail.extension}" alt="Portada del Comic: ${comic.title}" />
         </div>
         <h3 class="comic-title">${comic.title}</h3>
       </article>`
@@ -62,5 +63,34 @@ const drawComics = () => {
   })
 }
 
+const drawCharacters = () => {
+  fetch(`${baseUrl}/characters?apikey=${apiKey}&offset=0&orderBy=name`)
+  .then(res => res.json())
+  .then(data => {
+    
+    console.log(data)
+    let characters = data.data.results;
+    let total = data.data.total;
+
+    
+    totalResults.textContent = `${total} RESULTADOS`
+    mainSection.innerHTML = '';
+    characters.map(character => {
+      mainSection.innerHTML += `
+      <article class="character-card" data-character-id="${character.id}">
+        <div class="character-img-container">
+          <img class="character-img" src="${character.thumbnail.path + imageSize}.${character.thumbnail.extension}" alt="Personaje de Marvel: ${character.name}" />
+        </div>
+        <h3 class="character-name">${character.name.toUpperCase()}</h3>
+      </article>`
+    })
+
+    hideLoader(loaderOverlay, mainSection);
+    isDisabled(firstPageButton);
+    isDisabled(previousPageButton);
+  })
+}
+
 showLoader(loaderOverlay, mainSection);
-drawComics();
+//drawCharacters();
+ drawComics();
