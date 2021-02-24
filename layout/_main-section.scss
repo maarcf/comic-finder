@@ -7,7 +7,7 @@ main {
     margin-bottom: 20px;
   }
 
-  p {
+  .total-results {
     @extend %secondary-typography-style;
   }
 }

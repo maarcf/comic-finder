@@ -1,4 +1,5 @@
 // DOM Variables // 
+const searchResultsSection = document.querySelector('.search-result');
 const mainSection = document.querySelector('#results');
 const totalResults = document.querySelector('#total-results');
 const loaderOverlay = document.querySelector('.overlay');
@@ -36,61 +37,139 @@ const isEnabled = button => {
   button.children[0].style.color = '#fff';
 };
 
-const drawComics = () => {
+// create HTML //
+const createCharactersCards = characters => {
+  mainSection.innerHTML = '';
+  characters.map(character => {
+    mainSection.innerHTML += `
+    <article class="character-card" data-character-id="${character.id}">
+      <div class="character-img-container">
+        <img class="character-img" src="${character.thumbnail.path + imageSize}.${character.thumbnail.extension}" alt="Personaje de Marvel: ${character.name}" />
+      </div>
+      <h3 class="character-name">${character.name.toUpperCase()}</h3>
+    </article>`;
+  });
+};
+
+const createComicsCards = comics => {
+  mainSection.innerHTML = '';
+  comics.map(comic => {
+    mainSection.innerHTML += `
+    <article class="comic-card" data-comic-id="${comic.id}">
+      <div class="comic-img-container">
+        <img class="comic-img" src="${comic.thumbnail.path + imageSize}.${comic.thumbnail.extension}" alt="Portada del Comic: ${comic.title}" />
+      </div>
+      <h3 class="comic-title">${comic.title}</h3>
+    </article>`;
+  });
+};
+
+const createComicSection = (info, description, authors, dateSale) => {
+  searchResultsSection.innerHTML = `
+  <div class="search-img-container">
+    <img src="${info.thumbnail.path}.${info.thumbnail.extension}" alt="Portada del Comic: ${info.title}">
+  </div>
+  <div class="search-info">
+    <h2>${info.title}</h2>
+    <h3>Publicado:</h3>
+    <p>${dateSale}</p>
+    <h3>Escritores:</h3>
+    <p>${authors.name}</p>
+    <h3>Descripción:</h3>
+    <p>${description}</p>
+  </div>`;
+};
+
+const createCharacterSection = (info, description) => {
+  searchResultsSection.innerHTML = `
+  <div class="search-img-container">
+    <img src="${info.thumbnail.path}.${info.thumbnail.extension}" alt="Personaje de Marvel: ${info.name}">
+  </div>
+  <div class="search-info">
+    <h2>${info.name}</h2>
+    <h3>Descripción:</h3>
+    <p>${description}</p>
+  </div>`;
+};
+
+
+// Fetchs //
+const comicsFetch = () => {
   fetch(`${baseUrl}/comics?apikey=${apiKey}&offset=0&orderBy=title`)
   .then(res => res.json())
   .then(data => {
     
     console.log(data)
     let comics = data.data.results;
-    let total = data.data.total;
-
-    
+    let total = data.data.total;  
     totalResults.textContent = `${total} RESULTADOS`
-    mainSection.innerHTML = '';
-    comics.map(comic => {
-      mainSection.innerHTML += `
-      <article class="comic-card" data-comic-id="${comic.id}">
-        <div class="comic-img-container">
-          <img class="comic-img" src="${comic.thumbnail.path + imageSize}.${comic.thumbnail.extension}" alt="Portada del Comic: ${comic.title}" />
-        </div>
-        <h3 class="comic-title">${comic.title}</h3>
-      </article>`
-    })
+
+    createComicsCards(comics);
     hideLoader(loaderOverlay, mainSection);
     isDisabled(firstPageButton);
     isDisabled(previousPageButton);
   })
-}
+};
 
-const drawCharacters = () => {
+const charactersFetch = () => {
   fetch(`${baseUrl}/characters?apikey=${apiKey}&offset=0&orderBy=name`)
   .then(res => res.json())
   .then(data => {
     
     console.log(data)
+
     let characters = data.data.results;
     let total = data.data.total;
+    totalResults.textContent = `${total} RESULTADOS`;
 
-    
-    totalResults.textContent = `${total} RESULTADOS`
-    mainSection.innerHTML = '';
-    characters.map(character => {
-      mainSection.innerHTML += `
-      <article class="character-card" data-character-id="${character.id}">
-        <div class="character-img-container">
-          <img class="character-img" src="${character.thumbnail.path + imageSize}.${character.thumbnail.extension}" alt="Personaje de Marvel: ${character.name}" />
-        </div>
-        <h3 class="character-name">${character.name.toUpperCase()}</h3>
-      </article>`
-    })
 
+    createCharactersCards(characters);  
     hideLoader(loaderOverlay, mainSection);
     isDisabled(firstPageButton);
     isDisabled(previousPageButton);
-  })
-}
+  });
+};
 
-showLoader(loaderOverlay, mainSection);
-//drawCharacters();
- drawComics();
+const searchFetch = () => {
+  // fetch(`${baseUrl}/comics/71400?apikey=${apiKey}&offset=0`)
+  // .then(res => res.json())
+  // .then(data => {
+  //   console.log(data)
+    
+  //   let comic = data.data.results;
+    
+  //   comic.map(info => {
+  //     searchResultsSection.innerHTML = '';
+
+  //     let description = !info.description ? 'No tenemos información para mostrar 😢' : info.description;
+
+  //     let authors = info.creators.items.find(author => author.role === 'writer');
+      
+  //     let dateSale = info.dates.find(date => date.type === 'onsaleDate');
+  //     dateSale = new Date(dateSale.date).toLocaleDateString('es-AR');
+
+  //     createComicSection(info, description, authors, dateSale);
+      
+  //   });  
+
+  // });
+
+  fetch(`${baseUrl}/characters/1011347?apikey=${apiKey}&offset=0`)
+  .then(res => res.json())
+  .then(data => {
+    console.log(data)
+    
+    let character = data.data.results;
+    console.log(character);
+
+    searchResultsSection.innerHTML = '';
+    character.map(info => {
+      let description = !info.description ? 'No tenemos información para mostrar 😢' : info.description;
+      createCharacterSection(info, description);      
+    });
+  });
+};
+//showLoader(loaderOverlay, mainSection);
+
+searchFetch();
+comicsFetch();

@@ -63,8 +63,24 @@
 
     </form>
 
-    <h2>Resultados</h2>
-    <p id="total-results">0 RESULTADOS</p>
+    <section class="search-result">
+      <div class="search-img-container">
+        <img src="https://placekitten.com/350/550" alt="">
+      </div>
+      <div class="search-info">
+        <h2> Soy un gatito </h2>
+        <h3>Publicado:</h3>
+        <p>18/02/2021</p>
+        <h3>Escritores:</h3>
+        <p>Misha el gato</p>
+        <h3>Descripción:</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, saepe velit. Delectus laudantium suscipit dolore placeat ipsum.</p>
+      </div>
+    </section>
+
+
+    <h2 id="title-results-section">Resultados</h2>
+    <p class="total-results" id="total-results">0 RESULTADOS</p>
 
     <section id="results" class="results">
 
@@ -95,8 +111,8 @@
       </ul>
     </nav>
 
-    <div class="overlay hidden" role="alert" aria-label="Cargando resultados...">
-      <div class="loader" role="progressbar" aria-labelledby="results"></div>
+    <div class="overlay hidden" role="alertdialog" aria-modal="true" aria-label="Cargando resultados...">
+      <div class="loader" aria-labelledby="results"></div>
     </div>
     
 

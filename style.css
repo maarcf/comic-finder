@@ -5,7 +5,7 @@
   align-items: center;
 }
 
-.search-form .selects-options label, main p {
+.search-form .selects-options label, main .total-results {
   font-size: 14px;
   color: #757575;
   font-weight: 700;
@@ -162,6 +162,28 @@ main, header, footer, .character-card, .comic-card {
 @media (max-width: 360px) {
   .character-card {
     width: 250px;
+  }
+}
+
+.search-result {
+  display: flex;
+  margin-bottom: 60px;
+}
+.search-result .search-img-container {
+  display: flex;
+  max-width: 350px;
+  margin-right: 40px;
+}
+.search-result .search-img-container img {
+  width: 100%;
+  height: auto;
+}
+.search-result .search-info p {
+  margin: 10px 5px 20px;
+}
+@media (max-width: 660px) {
+  .search-result {
+    flex-direction: column;
   }
 }
 

@@ -1,0 +1,25 @@
+.search-result {
+  display: flex;
+  margin-bottom: 60px;
+
+  .search-img-container {
+    display: flex;
+    max-width: 350px;
+    margin-right: 40px;
+
+    img {
+      @include size(100%, auto)
+    }
+  }
+
+  .search-info {
+    p {
+      margin: 10px 5px 20px;
+    }
+  }
+
+  @media (max-width: $medium-breakpoint) {
+    flex-direction: column;
+  }
+
+}
