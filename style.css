@@ -277,7 +277,7 @@ main h2 {
 .search-form .input-text label {
   position: relative;
 }
-.search-form .input-text label input[type=text] {
+.search-form .input-text label input[type=search] {
   border: none;
   border-bottom: 2px solid #151515;
   padding: 8px 35px;
@@ -285,7 +285,7 @@ main h2 {
   width: 450px;
 }
 @media (max-width: 660px) {
-  .search-form .input-text label input[type=text] {
+  .search-form .input-text label input[type=search] {
     width: 80%;
   }
 }

@@ -29,9 +29,9 @@
   <main>
     <h2>Búsqueda</h2>
     <form id="search-form" class="search-form">      
-      <fieldset class="fieldset input-text">
+      <fieldset class="fieldset input-text" title="Búsqueda por texto" role="search">
         <label for="search-input">
-          <input type="text" placeholder="Ingresá tu búsqueda" name="search-input" id="search-input"/>
+          <input type="search" placeholder="Ingresá tu búsqueda" name="q" id="search-input"/>
 
           <div class="icon-container">
             <i class="fas fa-search" aria-hidden="true"></i>
@@ -39,7 +39,7 @@
         </label>
       </fieldset>
 
-      <fieldset class="fieldset selects-options">
+      <fieldset class="fieldset selects-options" title="Opciones de búsquedas">
         <label for="search-type">
           TIPO
           <select name="search-type" id="search-type">
@@ -48,13 +48,13 @@
           </select>
         </label>
 
-        <label for="search-sort">
+        <label for="search-sort"  aria-live="polite">
           ORDEN
           <select name="search-sort" id="search-sort">
             <option value="title" selected>A - Z</option>
             <option value="-title">Z - A</option>
             <option value="-foc-date">Más nuevos</option>   
-            <option value="foc-date">Más viejos</option> 
+            <option value="foc-date">Más viejos</option>
           </select>
         </label>
       </fieldset>
@@ -64,18 +64,6 @@
     </form>
 
     <section class="search-result">
-      <div class="search-img-container">
-        <img src="https://placekitten.com/350/550" alt="">
-      </div>
-      <div class="search-info">
-        <h2> Soy un gatito </h2>
-        <h3>Publicado:</h3>
-        <p>18/02/2021</p>
-        <h3>Escritores:</h3>
-        <p>Misha el gato</p>
-        <h3>Descripción:</h3>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, saepe velit. Delectus laudantium suscipit dolore placeat ipsum.</p>
-      </div>
     </section>
 
 
@@ -86,7 +74,7 @@
 
     </section>
 
-    <nav class="pagination-container">
+    <nav class="pagination-container" aria-label="Paginación">
       <ul>
         <li>
           <button id="first-page" class="pagination button" aria-label="Ir a la primera página">

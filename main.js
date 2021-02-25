@@ -1,5 +1,5 @@
 // DOM Variables // 
-const searchResultsSection = document.querySelector('.search-result');
+const singleResultSection = document.querySelector('.search-result');
 const mainSection = document.querySelector('#results');
 const totalResults = document.querySelector('#total-results');
 const loaderOverlay = document.querySelector('.overlay');
@@ -7,6 +7,11 @@ const firstPageButton = document.querySelector('#first-page');
 const previousPageButton = document.querySelector('#previous-page');
 const nextPageButton = document.querySelector('#next-page');
 const lastPageButton = document.querySelector('#last-page');
+const searchForm = document.querySelector('#search-form');
+const textSearchInput = document.querySelector('#search-input');
+const selectType = document.querySelector('#search-type');
+const selectSort = document.querySelector('#search-sort');
+const labelSort = selectSort.parentElement;
 
 // JS Variables//
 const baseUrl = 'https://gateway.marvel.com/v1/public/';
@@ -27,6 +32,9 @@ const hideLoader = (overlay, section) => {
   section.setAttribute('aria-busy', 'false');
 };
 
+// Clean HTML //
+const cleanSection = section => section.innerHTML = '';
+
 // Disabled and Enabled //
 const isDisabled = button => {
   button.disabled = true;
@@ -40,7 +48,7 @@ const isEnabled = button => {
 
 // create HTML //
 const createCharactersCards = characters => {
-  mainSection.innerHTML = '';
+  cleanSection(mainSection);
   characters.map(character => {
     mainSection.innerHTML += `
     <article class="character-card" data-character-id="${character.id}">
@@ -53,7 +61,7 @@ const createCharactersCards = characters => {
 };
 
 const createComicsCards = comics => {
-  mainSection.innerHTML = '';
+  cleanSection(mainSection);
   comics.map(comic => {
     mainSection.innerHTML += `
     <article class="comic-card" data-comic-id="${comic.id}">
@@ -66,7 +74,7 @@ const createComicsCards = comics => {
 };
 
 const createComicSection = (info, noInfo, authors, dateSale) => {
-  searchResultsSection.innerHTML = `
+  singleResultSection.innerHTML = `
   <div class="search-img-container">
     <img src="${info.thumbnail.path}.${info.thumbnail.extension}" alt="Portada del Comic: ${info.title}">
   </div>
@@ -82,7 +90,7 @@ const createComicSection = (info, noInfo, authors, dateSale) => {
 };
 
 const createCharacterSection = (info,  noInfo,) => {
-  searchResultsSection.innerHTML = `
+  singleResultSection.innerHTML = `
   <div class="search-img-container">
     <img src="${info.thumbnail.path}.${info.thumbnail.extension}" alt="Personaje de Marvel: ${info.name}">
   </div>
@@ -93,7 +101,44 @@ const createCharacterSection = (info,  noInfo,) => {
   </div>`;
 };
 
+const createSortSelect = (selectTypeValue, labelSort) => {  
+  switch (selectTypeValue) {
+    case "comics":
+      console.log(labelSort)
+      cleanSection(labelSort);
+      labelSort.setAttribute('aria-label', '"Ordenar comics por..."');
+      labelSort.innerHTML = `
+        ORDEN
+        <select name="search-sort" id="search-sort">
+          <option value="title" selected>A - Z</option>
+          <option value="-title">Z - A</option>
+          <option value="-foc-date">Más nuevos</option>   
+          <option value="foc-date">Más viejos</option>
+        </select>
+      `;
+      break;
 
+    case "characters":
+      console.log(labelSort)
+      cleanSection(labelSort);
+      labelSort.setAttribute('aria-label', '"Ordenar personajes por..."');
+      labelSort.innerHTML = `
+        ORDEN
+        <select name="search-sort" id="search-sort">
+          <option value="name" selected>A - Z</option>
+          <option value="-name">Z - A</option>
+        </select>
+      `;
+      break;
+  }
+
+}
+
+createSortSelect(selectType.value, labelSort);
+selectType.onchange = (value, labelSort) => {
+  value = selectType.value
+  createSortSelect(value, labelSort);
+}
 // Fetchs //
 const comicsFetch = () => {
   fetch(`${baseUrl}/comics?apikey=${apiKey}&offset=0&orderBy=title`)
@@ -109,7 +154,7 @@ const comicsFetch = () => {
     hideLoader(loaderOverlay, mainSection);
     isDisabled(firstPageButton);
     isDisabled(previousPageButton);
-  })
+  });
 };
 
 const charactersFetch = () => {
@@ -134,13 +179,10 @@ const charactersFetch = () => {
 const searchFetch = () => {
   // fetch(`${baseUrl}/comics/71400?apikey=${apiKey}&offset=0`)
   // .then(res => res.json())
-  // .then(data => {
-  //   console.log(data)
-    
-  //   let comic = data.data.results;
-    
+  // .then(data => { 
+  //   let comic = data.data.results;    
   //   comic.map(info => {
-  //     searchResultsSection.innerHTML = '';
+  //     cleanSection(singleResultSection);
 
   //     let authors = info.creators.items.find(author => author.role === 'writer');
       
@@ -155,13 +197,9 @@ const searchFetch = () => {
 
   fetch(`${baseUrl}/characters/1009157?apikey=${apiKey}&offset=0`)
   .then(res => res.json())
-  .then(data => {
-    console.log(data)
-    
+  .then(data => {    
     let character = data.data.results;
-    console.log(character);
-
-    searchResultsSection.innerHTML = '';
+    cleanSection(singleResultSection);
     character.map(info => {
       createCharacterSection(info, noInfo);      
     });
