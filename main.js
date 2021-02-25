@@ -12,6 +12,7 @@ const lastPageButton = document.querySelector('#last-page');
 const baseUrl = 'https://gateway.marvel.com/v1/public/';
 const apiKey = '08b7060939db82c5ed50966d57a02ac5';
 const imageSize = '/portrait_uncanny';
+const noInfo = 'No tenemos información para mostrar 😢';
 
 // Loader //
 const showLoader = (overlay, section) => {
@@ -64,7 +65,7 @@ const createComicsCards = comics => {
   });
 };
 
-const createComicSection = (info, description, authors, dateSale) => {
+const createComicSection = (info, noInfo, authors, dateSale) => {
   searchResultsSection.innerHTML = `
   <div class="search-img-container">
     <img src="${info.thumbnail.path}.${info.thumbnail.extension}" alt="Portada del Comic: ${info.title}">
@@ -76,11 +77,11 @@ const createComicSection = (info, description, authors, dateSale) => {
     <h3>Escritores:</h3>
     <p>${authors.name}</p>
     <h3>Descripción:</h3>
-    <p>${description}</p>
+    <p>${info.description.trim() || noInfo}</p>
   </div>`;
 };
 
-const createCharacterSection = (info, description) => {
+const createCharacterSection = (info,  noInfo,) => {
   searchResultsSection.innerHTML = `
   <div class="search-img-container">
     <img src="${info.thumbnail.path}.${info.thumbnail.extension}" alt="Personaje de Marvel: ${info.name}">
@@ -88,7 +89,7 @@ const createCharacterSection = (info, description) => {
   <div class="search-info">
     <h2>${info.name}</h2>
     <h3>Descripción:</h3>
-    <p>${description}</p>
+    <p>${info.description.trim() || noInfo}</p>
   </div>`;
 };
 
@@ -141,20 +142,18 @@ const searchFetch = () => {
   //   comic.map(info => {
   //     searchResultsSection.innerHTML = '';
 
-  //     let description = !info.description ? 'No tenemos información para mostrar 😢' : info.description;
-
   //     let authors = info.creators.items.find(author => author.role === 'writer');
       
   //     let dateSale = info.dates.find(date => date.type === 'onsaleDate');
-  //     dateSale = new Date(dateSale.date).toLocaleDateString('es-AR');
+  //     dateSale = new Date(dateSale.date).toLocaleDateString();
 
-  //     createComicSection(info, description, authors, dateSale);
+  //     createComicSection(info, noInfo, authors, dateSale);
       
   //   });  
 
   // });
 
-  fetch(`${baseUrl}/characters/1011347?apikey=${apiKey}&offset=0`)
+  fetch(`${baseUrl}/characters/1009157?apikey=${apiKey}&offset=0`)
   .then(res => res.json())
   .then(data => {
     console.log(data)
@@ -164,8 +163,7 @@ const searchFetch = () => {
 
     searchResultsSection.innerHTML = '';
     character.map(info => {
-      let description = !info.description ? 'No tenemos información para mostrar 😢' : info.description;
-      createCharacterSection(info, description);      
+      createCharacterSection(info, noInfo);      
     });
   });
 };
