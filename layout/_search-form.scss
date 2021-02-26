@@ -2,8 +2,6 @@
   @extend %flex-wrap;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 60px;
-
   
   .fieldset {
     border: none;
@@ -18,7 +16,7 @@
       input[type=search] {
         border: none;
         border-bottom: 2px solid $main-color;
-        padding: 8px 35px;
+        padding: 8px 8px 8px 35px;
         font-size: 22px;
         width: 450px;
 
@@ -55,4 +53,8 @@
       }
     }
   }
+}
+
+.hidden {
+  display: none;
 }

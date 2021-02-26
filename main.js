@@ -12,12 +12,12 @@ const textSearchInput = document.querySelector('#search-input');
 const selectType = document.querySelector('#search-type');
 const selectSort = document.querySelector('#search-sort');
 const labelSort = selectSort.parentElement;
-
-console.log(selectSort)
+const searchButton = document.querySelector('#search-button');
 
 // JS Variables//
-const baseUrl = 'https://gateway.marvel.com/v1/public/';
+const urlBase ='https://gateway.marvel.com/v1/public/';
 const apiKey = '08b7060939db82c5ed50966d57a02ac5';
+const currentPage = 0;
 const imageSize = '/portrait_uncanny';
 const noInfo = 'No tenemos información para mostrar 😢';
 
@@ -87,7 +87,7 @@ const createComicSection = (info, noInfo, authors, dateSale) => {
     <h3>Escritores:</h3>
     <p>${authors.name}</p>
     <h3>Descripción:</h3>
-    <p>${info.description.trim() || noInfo}</p>
+    <p>${info.description || noInfo}</p>
   </div>`;
 };
 
@@ -109,8 +109,8 @@ const createSortSelect = (value, label, sort) => {
     sort.innerHTML = `
     <option value="title" selected>A - Z</option>
     <option value="-title">Z - A</option>
-    <option value="-foc-date">Más nuevos</option>   
-    <option value="foc-date">Más viejos</option>
+    <option value="-focDate">Más nuevos</option>   
+    <option value="focDate">Más viejos</option>
     `;
   }
   else {
@@ -133,27 +133,45 @@ selectType.onchange = (value, label, sort) => {
 } 
 
 
+
+
+// Other Fuctions //
+const resetOffset = () => currentPage = 0;
+const noResults = result => {
+  if (result.length === 0) {
+    mainSection.innerHTML = `<h2>${noInfo}<h2>`;
+  };
+};
+
 // Fetchs //
-const comicsFetch = () => {
-  fetch(`${baseUrl}/comics?apikey=${apiKey}&offset=0&orderBy=title`)
-  .then(res => res.json())
+const comicsFetch = (urlBase, collection, apiKey, sort) => {
+  fetch(`${urlBase}${collection}?apikey=${apiKey}&offset=0&orderBy=${sort}`)
+  .then(res => {
+    showLoader(loaderOverlay, mainSection);
+    return res.json();
+  })
   .then(data => {
     
     console.log(data)
     let comics = data.data.results;
     let total = data.data.total;  
+
     totalResults.textContent = `${total} RESULTADOS`
 
     createComicsCards(comics);
     hideLoader(loaderOverlay, mainSection);
+    noResults(comics);
     isDisabled(firstPageButton);
     isDisabled(previousPageButton);
   });
 };
 
-const charactersFetch = () => {
-  fetch(`${baseUrl}/characters?apikey=${apiKey}&offset=0&orderBy=name`)
-  .then(res => res.json())
+const charactersFetch = (urlBase, collection, apiKey, sort) => {
+  fetch(`${urlBase}${collection}?apikey=${apiKey}&offset=0&orderBy=${sort}`)
+  .then(res => {
+    showLoader(loaderOverlay, mainSection);
+    return res.json()
+  })
   .then(data => {
     
     console.log(data)
@@ -165,41 +183,114 @@ const charactersFetch = () => {
 
     createCharactersCards(characters);  
     hideLoader(loaderOverlay, mainSection);
+    noResults(characters);
     isDisabled(firstPageButton);
     isDisabled(previousPageButton);
   });
 };
 
-const searchFetch = () => {
-  // fetch(`${baseUrl}/comics/71400?apikey=${apiKey}&offset=0`)
-  // .then(res => res.json())
-  // .then(data => { 
-  //   let comic = data.data.results;    
-  //   comic.map(info => {
-  //     cleanSection(singleResultSection);
+const singleResultFetch = (urlBase, collection, id, apiKey) => {
+  if (collection === 'comics') {
+    fetch(`${urlBase}${collection}/${id}?apikey=${apiKey}&offset=0`)
+    .then(res => res.json())
+    .then(data => { 
+      console.log(data)
+      let comic = data.data.results;    
+      comic.map(info => {
+        cleanSection(singleResultSection);
 
-  //     let authors = info.creators.items.find(author => author.role === 'writer');
-      
-  //     let dateSale = info.dates.find(date => date.type === 'onsaleDate');
-  //     dateSale = new Date(dateSale.date).toLocaleDateString();
+        let authors = info.creators.items.find(author => author.role === 'writer');
+        
+        let dateSale = info.dates.find(date => date.type === 'onsaleDate');
+        dateSale = new Date(dateSale.date).toLocaleDateString();
 
-  //     createComicSection(info, noInfo, authors, dateSale);
-      
-  //   });  
-
-  // });
-
-  fetch(`${baseUrl}/characters/1009157?apikey=${apiKey}&offset=0`)
-  .then(res => res.json())
-  .then(data => {    
-    let character = data.data.results;
-    cleanSection(singleResultSection);
-    character.map(info => {
-      createCharacterSection(info, noInfo);      
+        createComicSection(info, noInfo, authors, dateSale);
+        
+      });  
     });
-  });
+  }
+  else {
+    fetch(`${urlBase}${collection}/${id}?apikey=${apiKey}&offset=0`)
+    .then(res => res.json())
+    .then(data => {    
+      let character = data.data.results;
+      cleanSection(singleResultSection);
+      character.map(info => {
+        createCharacterSection(info, noInfo);      
+      });
+    });
+  };  
 };
+
 //showLoader(loaderOverlay, mainSection);
 
-searchFetch();
-comicsFetch();
+// Se debe poder realizar una búsqueda de cómics
+// Se debe poder realizar una búsqueda por título
+// Se debe poder ordenar los resultados alfabéticamente y por fecha de lanzamiento, en orden ascendente y descendente
+
+// Se debe poder realizar una búsqueda de personajes de cómics
+// Se debe poder realizar una búsqueda por nombre
+// Se debe poder ordenar los resultados alfabéticamente, en orden ascendente y descendente
+
+searchForm.onsubmit = e => {
+  e.preventDefault();
+  let sort = selectSort.value;
+  let collection = selectType.value;
+
+  // COMICS BUSCA POR NOMBRE Y SIN NOMBRE //
+  if (collection === 'comics') {
+    if (Boolean(textSearchInput.value)) {
+      // ESTO ES LO MISMO QUE COMICSFETCH() CAMBIA LA RUTA DE LA API. PENSAR COMO MEJORARLO PARA NO REPETIR CODIGO
+      fetch(`${urlBase}${collection}?apikey=${apiKey}&offset=0&orderBy=${sort}&titleStartsWith=${textSearchInput.value}`)
+      .then(res => {
+        showLoader(loaderOverlay, mainSection);
+        return res.json();
+      })
+      .then(data => {
+        
+        console.log('Soy data del onsubmit', data)
+        let comics = data.data.results;
+        let total = data.data.total;  
+
+        totalResults.textContent = `${total} RESULTADOS`
+
+        createComicsCards(comics);
+        noResults(comics);
+        hideLoader(loaderOverlay, mainSection);
+        isDisabled(firstPageButton);
+        isDisabled(previousPageButton);
+      });
+    }
+    else {
+      comicsFetch(urlBase, collection, apiKey, sort);
+    }
+  }
+  else {
+    if (Boolean(textSearchInput.value)) {
+      fetch(`${urlBase}${collection}?apikey=${apiKey}&offset=0&orderBy=${sort}&nameStartsWith=${textSearchInput.value}`)
+      .then(res => {
+        showLoader(loaderOverlay, mainSection);
+        return res.json()
+      })
+      .then(data => {
+        
+        console.log(data)
+
+        let characters = data.data.results;
+        let total = data.data.total;
+        totalResults.textContent = `${total} RESULTADOS`;
+
+        createCharactersCards(characters);  
+        hideLoader(loaderOverlay, mainSection);
+        noResults(characters);
+      });
+    }
+    else {
+      charactersFetch(urlBase, collection, apiKey, sort);
+    }
+
+  }
+}
+
+singleResultFetch(urlBase, 'characters', '1009726', apiKey);
+comicsFetch(urlBase, 'comics', apiKey, 'title');

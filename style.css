@@ -58,10 +58,6 @@ main, header, footer, .character-card, .comic-card {
   }
 }
 
-.hidden {
-  display: none;
-}
-
 .button {
   padding: 10px;
   font-size: 16px;
@@ -167,7 +163,7 @@ main, header, footer, .character-card, .comic-card {
 
 .search-result {
   display: flex;
-  margin-bottom: 60px;
+  margin-top: 60px;
 }
 .search-result .search-img-container {
   display: flex;
@@ -233,11 +229,11 @@ header .hero-image {
 }
 
 main {
-  margin: 60px 75px 80px;
+  margin: 0px 75px 80px;
   position: relative;
 }
 main h2 {
-  margin-bottom: 20px;
+  margin: 60px 0 20px;
 }
 .results {
   margin: 50px 0;
@@ -266,7 +262,6 @@ main h2 {
 .search-form {
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 60px;
 }
 .search-form .fieldset {
   border: none;
@@ -280,7 +275,7 @@ main h2 {
 .search-form .input-text label input[type=search] {
   border: none;
   border-bottom: 2px solid #151515;
-  padding: 8px 35px;
+  padding: 8px 8px 8px 35px;
   font-size: 22px;
   width: 450px;
 }
@@ -311,6 +306,10 @@ main h2 {
   margin-left: 5px;
   font-size: 16px;
   font-weight: 900;
+}
+
+.hidden {
+  display: none;
 }
 
 /*# sourceMappingURL=style.css.map */
