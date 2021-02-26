@@ -13,6 +13,8 @@ const selectType = document.querySelector('#search-type');
 const selectSort = document.querySelector('#search-sort');
 const labelSort = selectSort.parentElement;
 
+console.log(selectSort)
+
 // JS Variables//
 const baseUrl = 'https://gateway.marvel.com/v1/public/';
 const apiKey = '08b7060939db82c5ed50966d57a02ac5';
@@ -101,44 +103,36 @@ const createCharacterSection = (info,  noInfo,) => {
   </div>`;
 };
 
-const createSortSelect = (selectTypeValue, labelSort) => {  
-  switch (selectTypeValue) {
-    case "comics":
-      console.log(labelSort)
-      cleanSection(labelSort);
-      labelSort.setAttribute('aria-label', '"Ordenar comics por..."');
-      labelSort.innerHTML = `
-        ORDEN
-        <select name="search-sort" id="search-sort">
-          <option value="title" selected>A - Z</option>
-          <option value="-title">Z - A</option>
-          <option value="-foc-date">Más nuevos</option>   
-          <option value="foc-date">Más viejos</option>
-        </select>
-      `;
-      break;
-
-    case "characters":
-      console.log(labelSort)
-      cleanSection(labelSort);
-      labelSort.setAttribute('aria-label', '"Ordenar personajes por..."');
-      labelSort.innerHTML = `
-        ORDEN
-        <select name="search-sort" id="search-sort">
-          <option value="name" selected>A - Z</option>
-          <option value="-name">Z - A</option>
-        </select>
-      `;
-      break;
+const createSortSelect = (value, label, sort) => {
+  if (value === 'comics') {
+    label.setAttribute('aria-label', 'Ordenar comics por...');
+    sort.innerHTML = `
+    <option value="title" selected>A - Z</option>
+    <option value="-title">Z - A</option>
+    <option value="-foc-date">Más nuevos</option>   
+    <option value="foc-date">Más viejos</option>
+    `;
   }
-
+  else {
+    label.setAttribute('aria-label', 'Ordenar personajes por...');
+    sort.innerHTML = `
+    <option value="name" selected>A - Z</option>
+    <option value="-name">Z - A</option>
+    `;
+  }
 }
 
-createSortSelect(selectType.value, labelSort);
-selectType.onchange = (value, labelSort) => {
-  value = selectType.value
-  createSortSelect(value, labelSort);
-}
+
+// Events //
+selectType.onchange = (value, label, sort) => { 
+  value = selectType.value;
+  label = labelSort;
+  sort = selectSort;
+
+  createSortSelect(value, label, sort);   
+} 
+
+
 // Fetchs //
 const comicsFetch = () => {
   fetch(`${baseUrl}/comics?apikey=${apiKey}&offset=0&orderBy=title`)
