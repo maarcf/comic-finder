@@ -10,4 +10,12 @@ main {
   .total-results {
     @extend %secondary-typography-style;
   }
+
+  @media (max-width: $medium-breakpoint) {
+    margin: 0 20px 40px;
+
+    h2 {
+      margin-top: 40px;
+    }
+  }
 }
