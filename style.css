@@ -149,13 +149,19 @@ main, header, footer, .character-card, .comic-card {
   .character-card {
     width: calc(100% / 4 - 2 * 10px);
   }
+  .character-card .character-name {
+    font-size: 12px;
+  }
 }
 @media (max-width: 660px) {
   .character-card {
     width: calc(100% / 3 - 2 * 10px);
   }
+  .character-card .character-name {
+    font-size: 14px;
+  }
 }
-@media (max-width: 660px) {
+@media (max-width: 460px) {
   .character-card {
     width: calc(100% / 2 - 2 * 10px);
   }
@@ -168,7 +174,7 @@ main, header, footer, .character-card, .comic-card {
 
 .search-result {
   display: flex;
-  margin-top: 60px;
+  margin: 40px 0;
 }
 .search-result .search-img-container {
   display: flex;
@@ -234,11 +240,11 @@ header .hero-image {
 }
 
 main {
-  margin: 0px 75px 80px;
+  margin: 60px 75px 80px;
   position: relative;
 }
 main h2 {
-  margin: 60px 0 20px;
+  margin-bottom: 20px;
 }
 @media (max-width: 660px) {
   main {
@@ -250,7 +256,7 @@ main h2 {
 }
 
 .results {
-  margin: 50px 0;
+  margin: 35px 0;
 }
 
 .pagination-container {

@@ -35,13 +35,19 @@
 
   @media (max-width: $large-breakpoint) {
     width: calc(100% / 4 - 2 * 10px);
+    .character-name {
+      font-size: 12px;
+    }
   }
 
   @media (max-width: $medium-breakpoint) {
     width: calc(100% / 3 - 2 * 10px);
+    .character-name {
+      font-size: 14px;
+    }
   }
 
-  @media (max-width: $medium-breakpoint) {
+  @media (max-width: $small-breakpoint) {
     width: calc(100% / 2 - 2 * 10px);
   }
 

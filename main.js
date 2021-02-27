@@ -12,7 +12,7 @@ const textSearchInput = document.querySelector('#search-input');
 const selectType = document.querySelector('#search-type');
 const selectSort = document.querySelector('#search-sort');
 const labelSort = selectSort.parentElement;
-const searchButton = document.querySelector('#search-button');
+const titleResults = document.querySelector('#title-results-section');
 
 // JS Variables//
 const urlBase ='https://gateway.marvel.com/v1/public/';
@@ -53,7 +53,7 @@ const createCharactersCards = characters => {
   cleanSection(mainSection);
   characters.map(character => {
     mainSection.innerHTML += `
-    <article class="character-card" data-character-id="${character.id}">
+    <article class="character-card" data-id="${character.id}">
       <div class="character-img-container">
         <img class="character-img" src="${character.thumbnail.path + imageSize}.${character.thumbnail.extension}" alt="Personaje de Marvel: ${character.name}" />
       </div>
@@ -66,7 +66,7 @@ const createComicsCards = comics => {
   cleanSection(mainSection);
   comics.map(comic => {
     mainSection.innerHTML += `
-    <article class="comic-card" data-comic-id="${comic.id}">
+    <article class="comic-card" data-id="${comic.id}">
       <div class="comic-img-container">
         <img class="comic-img" src="${comic.thumbnail.path + imageSize}.${comic.thumbnail.extension}" alt="Portada del Comic: ${comic.title}" />
       </div>
@@ -85,7 +85,7 @@ const createComicSection = (info, noInfo, authors, dateSale) => {
     <h3>Publicado:</h3>
     <p>${dateSale}</p>
     <h3>Escritores:</h3>
-    <p>${authors.name}</p>
+    <p>${authors.join(', ') || noInfo}</p>
     <h3>Descripción:</h3>
     <p>${info.description || noInfo}</p>
   </div>`;
@@ -139,7 +139,7 @@ selectType.onchange = (value, label, sort) => {
 const resetOffset = () => currentPage = 0;
 const noResults = result => {
   if (result.length === 0) {
-    mainSection.innerHTML = `<h2>${noInfo}<h2>`;
+    mainSection.innerHTML = `<h3>No se han encontrado resultados<h3>`;
   };
 };
 
@@ -155,7 +155,7 @@ const comicsFetch = (urlBase, collection, apiKey, sort) => {
     console.log(data)
     let comics = data.data.results;
     let total = data.data.total;  
-
+    titleResults.textContent = 'Resultados';
     totalResults.textContent = `${total} RESULTADOS`
 
     createComicsCards(comics);
@@ -163,6 +163,19 @@ const comicsFetch = (urlBase, collection, apiKey, sort) => {
     noResults(comics);
     isDisabled(firstPageButton);
     isDisabled(previousPageButton);
+
+    const comicsCards = document.querySelectorAll('.comic-card');
+    console.log('soy la comicsCards en fetch de comic comun', comicsCards)
+    comicsCards.forEach(singleCard => {
+      console.log('soy forEach en comicFetch')
+      singleCard.onclick = () => {
+        console.log('soy tarjeta de que le hiciste click')
+        let comicId = singleCard.dataset.id;
+        console.log('funciona onclick')
+        singleResultFetch(urlBase, collection, comicId, apiKey);
+        
+      }
+    })
   });
 };
 
@@ -179,6 +192,112 @@ const charactersFetch = (urlBase, collection, apiKey, sort) => {
     let characters = data.data.results;
     let total = data.data.total;
     totalResults.textContent = `${total} RESULTADOS`;
+    titleResults.textContent = 'Resultados';
+
+
+    createCharactersCards(characters);  
+    hideLoader(loaderOverlay, mainSection);
+    noResults(characters);
+    isDisabled(firstPageButton);
+    isDisabled(previousPageButton);
+
+    const charactersCards = document.querySelectorAll('.character-card');
+    console.log('tajetas en characters fetch', charactersCards);
+    charactersCards.forEach(singleCard => {
+      console.log('soy el forEach de lastarjetas')
+      singleCard.onclick = () => {
+        console.log('soy la tarjeta que le hiciste click en el fetch cjaracters')
+        let characterId = singleCard.dataset.id;
+        singleResultFetch(urlBase, collection, characterId, apiKey);        
+      };
+    });
+  });
+};
+
+const singleResultFetch = (urlBase, collection, id, apiKey) => {
+  if (collection === 'comics') {
+    fetch(`${urlBase}${collection}/${id}?apikey=${apiKey}&offset=0`)
+    .then(res => res.json())
+    .then(data => { 
+      console.log('Soy el data del singleResult', data)
+      let comic = data.data.results;    
+      comic.map(info => {
+        cleanSection(singleResultSection);
+
+        let authors = info.creators.items
+        .filter(author => author.role === 'writer')
+        .map(writer => writer.name);
+        
+        let dateSale = info.dates.find(date => date.type === 'onsaleDate');
+        dateSale = new Date(dateSale.date).toLocaleDateString();
+
+        createComicSection(info, noInfo, authors, dateSale);
+        charactersFetchSingleComic(urlBase, collection, id, 'characters', apiKey)
+        
+      });  
+    });
+  }
+  else {
+    fetch(`${urlBase}${collection}/${id}?apikey=${apiKey}&offset=0`)
+    .then(res => res.json())
+    .then(data => {    
+      console.log('soy el data en el singleResult', data)
+      let character = data.data.results;
+      cleanSection(singleResultSection);
+      character.map(info => {
+        createCharacterSection(info, noInfo);      
+      });
+      comicsFetchSingleCharacters(urlBase, collection, id, 'comics', apiKey)
+    });
+  };  
+};
+
+// fetchComicsDeUnPersonaje
+const comicsFetchSingleCharacters = (urlBase, idCollection, id, collection, apiKey) => {
+  fetch(`${urlBase}${idCollection}/${id}/${collection}?apikey=${apiKey}&offset=0`)
+  .then(res => {
+    showLoader(loaderOverlay, mainSection);
+    return res.json();
+  })
+  .then(data => {
+    
+    console.log(data)
+    let comics = data.data.results;
+    let total = data.data.total;  
+    titleResults.textContent = 'Comics'
+    totalResults.textContent = `${total} RESULTADOS`
+
+    createComicsCards(comics);
+    hideLoader(loaderOverlay, mainSection);
+    noResults(comics);
+    isDisabled(firstPageButton);
+    isDisabled(previousPageButton);
+
+    const comicsCards = document.querySelectorAll('.comic-card');
+    comicsCards.forEach(singleCard => {
+      singleCard.onclick = () => {
+        let comicId = singleCard.dataset.id;
+        singleResultFetch(urlBase, collection, comicId, apiKey);        
+      };
+    });
+  });
+};
+
+// fetchCharactersDeUnComic
+const charactersFetchSingleComic = (urlBase, idCollection, id, collection, apiKey) => {
+  fetch(`${urlBase}${idCollection}/${id}/${collection}?apikey=${apiKey}&offset=0`)
+  .then(res => {
+    showLoader(loaderOverlay, mainSection);
+    return res.json()
+  })
+  .then(data => {
+    
+    console.log(data)
+
+    let characters = data.data.results;
+    let total = data.data.total;
+    titleResults.textContent = 'Personajes'
+    totalResults.textContent = `${total} RESULTADOS`;
 
 
     createCharactersCards(characters);  
@@ -189,38 +308,6 @@ const charactersFetch = (urlBase, collection, apiKey, sort) => {
   });
 };
 
-const singleResultFetch = (urlBase, collection, id, apiKey) => {
-  if (collection === 'comics') {
-    fetch(`${urlBase}${collection}/${id}?apikey=${apiKey}&offset=0`)
-    .then(res => res.json())
-    .then(data => { 
-      console.log(data)
-      let comic = data.data.results;    
-      comic.map(info => {
-        cleanSection(singleResultSection);
-
-        let authors = info.creators.items.find(author => author.role === 'writer');
-        
-        let dateSale = info.dates.find(date => date.type === 'onsaleDate');
-        dateSale = new Date(dateSale.date).toLocaleDateString();
-
-        createComicSection(info, noInfo, authors, dateSale);
-        
-      });  
-    });
-  }
-  else {
-    fetch(`${urlBase}${collection}/${id}?apikey=${apiKey}&offset=0`)
-    .then(res => res.json())
-    .then(data => {    
-      let character = data.data.results;
-      cleanSection(singleResultSection);
-      character.map(info => {
-        createCharacterSection(info, noInfo);      
-      });
-    });
-  };  
-};
 
 //showLoader(loaderOverlay, mainSection);
 
@@ -251,17 +338,30 @@ searchForm.onsubmit = e => {
         console.log('Soy data del onsubmit', data)
         let comics = data.data.results;
         let total = data.data.total;  
-
+        titleResults.textContent = 'Resultados';
         totalResults.textContent = `${total} RESULTADOS`
 
+        cleanSection(singleResultSection);
         createComicsCards(comics);
         noResults(comics);
         hideLoader(loaderOverlay, mainSection);
         isDisabled(firstPageButton);
         isDisabled(previousPageButton);
+
+        const comicsCards = document.querySelectorAll('.comic-card');
+        console.log('comics en form')
+        comicsCards.forEach(singleCard => {
+          console.log('forEach en form')
+          singleCard.onclick = () => {
+            console.log('soy la tarjeta del form que le hiciste click')
+            let comicId = singleCard.dataset.id;
+            singleResultFetch(urlBase, collection, comicId, apiKey);        
+          };
+        });
       });
     }
     else {
+      cleanSection(singleResultSection);
       comicsFetch(urlBase, collection, apiKey, sort);
     }
   }
@@ -274,23 +374,36 @@ searchForm.onsubmit = e => {
       })
       .then(data => {
         
-        console.log(data)
+        console.log('Soy data del form', data)
 
         let characters = data.data.results;
         let total = data.data.total;
+        titleResults.textContent = 'Resultados';
         totalResults.textContent = `${total} RESULTADOS`;
 
+        cleanSection(singleResultSection);
         createCharactersCards(characters);  
         hideLoader(loaderOverlay, mainSection);
         noResults(characters);
+
+        const charactersCards = document.querySelectorAll('.character-card');
+        console.log('seleccionaste en el form las tarjetas de personas', charactersCards)
+        charactersCards.forEach(singleCard => {
+          console.log('soy el forEach de las tarjetas en el form')
+          singleCard.onclick = () => {
+            console.log('soy la tarjeta que le hiciste click en el form')
+          let characterId = singleCard.dataset.id;
+          singleResultFetch(urlBase, collection, characterId, apiKey);        
+          };
+        });
       });
     }
-    else {
+    else {      
+      cleanSection(singleResultSection);
       charactersFetch(urlBase, collection, apiKey, sort);
     }
 
   }
 }
 
-singleResultFetch(urlBase, 'characters', '1009726', apiKey);
 comicsFetch(urlBase, 'comics', apiKey, 'title');
