@@ -105,7 +105,7 @@ main, header, footer, .character-card, .comic-card {
     width: calc(100% / 3 - 2 * 10px);
   }
 }
-@media (max-width: 400px) {
+@media (max-width: 360px) {
   .comic-card {
     width: 250px;
   }
@@ -152,10 +152,15 @@ main, header, footer, .character-card, .comic-card {
 }
 @media (max-width: 660px) {
   .character-card {
+    width: calc(100% / 3 - 2 * 10px);
+  }
+}
+@media (max-width: 660px) {
+  .character-card {
     width: calc(100% / 2 - 2 * 10px);
   }
 }
-@media (max-width: 400px) {
+@media (max-width: 360px) {
   .character-card {
     width: 250px;
   }
@@ -288,7 +293,7 @@ main h2 {
 }
 @media (max-width: 660px) {
   .search-form .input-text label input[type=search] {
-    width: 80%;
+    width: 100%;
   }
 }
 .search-form .input-text label .icon-container {
@@ -329,7 +334,7 @@ main h2 {
     align-self: flex-end;
   }
 }
-@media (max-width: 400px) {
+@media (max-width: 460px) {
   .search-form .selects-options {
     flex-direction: column;
   }

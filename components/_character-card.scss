@@ -38,10 +38,14 @@
   }
 
   @media (max-width: $medium-breakpoint) {
+    width: calc(100% / 3 - 2 * 10px);
+  }
+
+  @media (max-width: $medium-breakpoint) {
     width: calc(100% / 2 - 2 * 10px);
   }
 
-  @media (max-width: $small-breakpoint) {
+  @media (max-width: $xsmall-breakpoint) {
     width: 250px;
   }
 }
