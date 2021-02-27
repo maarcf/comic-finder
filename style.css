@@ -177,6 +177,7 @@ main, header, footer, .character-card, .comic-card {
   margin: 40px 0;
 }
 .search-result .search-img-container {
+  flex: 1;
   display: flex;
   max-width: 350px;
   margin-right: 40px;
@@ -184,6 +185,9 @@ main, header, footer, .character-card, .comic-card {
 .search-result .search-img-container img {
   width: 100%;
   height: auto;
+}
+.search-result .search-info {
+  flex: 2;
 }
 .search-result .search-info p {
   margin: 10px 5px 20px;

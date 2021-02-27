@@ -165,15 +165,10 @@ const comicsFetch = (urlBase, collection, apiKey, sort) => {
     isDisabled(previousPageButton);
 
     const comicsCards = document.querySelectorAll('.comic-card');
-    console.log('soy la comicsCards en fetch de comic comun', comicsCards)
     comicsCards.forEach(singleCard => {
-      console.log('soy forEach en comicFetch')
       singleCard.onclick = () => {
-        console.log('soy tarjeta de que le hiciste click')
         let comicId = singleCard.dataset.id;
-        console.log('funciona onclick')
-        singleResultFetch(urlBase, collection, comicId, apiKey);
-        
+        singleResultFetch(urlBase, collection, comicId, apiKey);        
       }
     })
   });
@@ -202,11 +197,8 @@ const charactersFetch = (urlBase, collection, apiKey, sort) => {
     isDisabled(previousPageButton);
 
     const charactersCards = document.querySelectorAll('.character-card');
-    console.log('tajetas en characters fetch', charactersCards);
     charactersCards.forEach(singleCard => {
-      console.log('soy el forEach de lastarjetas')
       singleCard.onclick = () => {
-        console.log('soy la tarjeta que le hiciste click en el fetch cjaracters')
         let characterId = singleCard.dataset.id;
         singleResultFetch(urlBase, collection, characterId, apiKey);        
       };
@@ -232,7 +224,7 @@ const singleResultFetch = (urlBase, collection, id, apiKey) => {
         dateSale = new Date(dateSale.date).toLocaleDateString();
 
         createComicSection(info, noInfo, authors, dateSale);
-        charactersFetchSingleComic(urlBase, collection, id, 'characters', apiKey)
+        singleComicCharactersFetch(urlBase, collection, id, 'characters', apiKey)
         
       });  
     });
@@ -247,13 +239,13 @@ const singleResultFetch = (urlBase, collection, id, apiKey) => {
       character.map(info => {
         createCharacterSection(info, noInfo);      
       });
-      comicsFetchSingleCharacters(urlBase, collection, id, 'comics', apiKey)
+      singleCharacterComicsFetch(urlBase, collection, id, 'comics', apiKey)
     });
   };  
 };
 
 // fetchComicsDeUnPersonaje
-const comicsFetchSingleCharacters = (urlBase, idCollection, id, collection, apiKey) => {
+const singleCharacterComicsFetch = (urlBase, idCollection, id, collection, apiKey) => {
   fetch(`${urlBase}${idCollection}/${id}/${collection}?apikey=${apiKey}&offset=0`)
   .then(res => {
     showLoader(loaderOverlay, mainSection);
@@ -284,7 +276,7 @@ const comicsFetchSingleCharacters = (urlBase, idCollection, id, collection, apiK
 };
 
 // fetchCharactersDeUnComic
-const charactersFetchSingleComic = (urlBase, idCollection, id, collection, apiKey) => {
+const singleComicCharactersFetch = (urlBase, idCollection, id, collection, apiKey) => {
   fetch(`${urlBase}${idCollection}/${id}/${collection}?apikey=${apiKey}&offset=0`)
   .then(res => {
     showLoader(loaderOverlay, mainSection);
@@ -305,19 +297,19 @@ const charactersFetchSingleComic = (urlBase, idCollection, id, collection, apiKe
     noResults(characters);
     isDisabled(firstPageButton);
     isDisabled(previousPageButton);
+
+    const charactersCards = document.querySelectorAll('.character-card');
+    charactersCards.forEach(singleCard => {
+      singleCard.onclick = () => {
+        let characterId = singleCard.dataset.id;
+        singleResultFetch(urlBase, collection, characterId, apiKey);        
+      };
+    });
   });
 };
 
 
 //showLoader(loaderOverlay, mainSection);
-
-// Se debe poder realizar una búsqueda de cómics
-// Se debe poder realizar una búsqueda por título
-// Se debe poder ordenar los resultados alfabéticamente y por fecha de lanzamiento, en orden ascendente y descendente
-
-// Se debe poder realizar una búsqueda de personajes de cómics
-// Se debe poder realizar una búsqueda por nombre
-// Se debe poder ordenar los resultados alfabéticamente, en orden ascendente y descendente
 
 searchForm.onsubmit = e => {
   e.preventDefault();
@@ -349,11 +341,8 @@ searchForm.onsubmit = e => {
         isDisabled(previousPageButton);
 
         const comicsCards = document.querySelectorAll('.comic-card');
-        console.log('comics en form')
         comicsCards.forEach(singleCard => {
-          console.log('forEach en form')
           singleCard.onclick = () => {
-            console.log('soy la tarjeta del form que le hiciste click')
             let comicId = singleCard.dataset.id;
             singleResultFetch(urlBase, collection, comicId, apiKey);        
           };
@@ -387,11 +376,8 @@ searchForm.onsubmit = e => {
         noResults(characters);
 
         const charactersCards = document.querySelectorAll('.character-card');
-        console.log('seleccionaste en el form las tarjetas de personas', charactersCards)
         charactersCards.forEach(singleCard => {
-          console.log('soy el forEach de las tarjetas en el form')
           singleCard.onclick = () => {
-            console.log('soy la tarjeta que le hiciste click en el form')
           let characterId = singleCard.dataset.id;
           singleResultFetch(urlBase, collection, characterId, apiKey);        
           };
