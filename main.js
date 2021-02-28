@@ -224,50 +224,7 @@ const noResults = result => {
     mainSection.innerHTML = `<h3>No se han encontrado resultados<h3>`;
   };
 };
-
-
-// Pagination //
-firstPageButton.onclick = () => {
-  console.log('hiciste click en volver al inicio button');
-  console.log(currentPage);
-  resetOffset();
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
-  console.log(currentPage);
-}
-
-previousPageButton.onclick = () => {
-  console.log('hiciste click en el boton de página previa');
-  console.log(currentPage);
-  currentPage--;
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
-  console.log(currentPage);
-}
-
-nextPageButton.onclick = () => {
-  console.log('hiciste click en el boton de página siguiente');
-  console.log(currentPage);
-  currentPage++;
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
-  console.log(currentPage);
-}
-
-lastPageButton.onclick = () => {
-  console.log('hiciste click en el boton de última página');
-  let remainder = totalCount % resultsPerPage;
-  currentPage = remainder ? (totalCount - remainder) / resultsPerPage : (totalCount / resultsPerPage) - 1;
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
-  console.log(remainder, currentPage);
-}
-
-const updatePaginationButtons = () => {
+const updatePaginationButtonsAttribute = () => {
   if (currentPage === 0) {
     isDisabled(firstPageButton);
     isDisabled(previousPageButton);
@@ -275,17 +232,50 @@ const updatePaginationButtons = () => {
   else {
     isEnabled(firstPageButton);
     isEnabled(previousPageButton);
-  }
+  };
 
-  if (offset + 20 > totalCount) {
+  if (offset + resultsPerPage > totalCount) {
     isDisabled(nextPageButton);
     isDisabled(lastPageButton);
   }
   else {
     isEnabled(nextPageButton);
     isEnabled(lastPageButton);
-  }
-}
+  };
+};
+
+
+// Pagination //
+firstPageButton.onclick = () => {
+  resetOffset();
+  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
+  // REVISAAAAAAAAAR //
+  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
+};
+
+previousPageButton.onclick = () => {
+  currentPage--;
+  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
+  // REVISAAAAAAAAAR //
+  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
+};
+
+nextPageButton.onclick = () => {
+  currentPage++;
+  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
+  // REVISAAAAAAAAAR //
+  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
+};
+
+lastPageButton.onclick = () => {
+  let remainder = totalCount % resultsPerPage;
+  currentPage = remainder ? (totalCount - remainder) / resultsPerPage : (totalCount / resultsPerPage) - 1;
+  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
+  // REVISAAAAAAAAAR //
+  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
+};
+
+
 
 // Fetchs //
 const comicsFetch = (urlBase, collection, apiKey, currentPage, resultsPerPage, sort) => {
@@ -307,7 +297,7 @@ const comicsFetch = (urlBase, collection, apiKey, currentPage, resultsPerPage, s
     noResults(comics);
 
     offset = data.data.offset;
-    updatePaginationButtons();
+    updatePaginationButtonsAttribute();
 
     const comicsCards = document.querySelectorAll('.comic-card');
     comicsCards.forEach(singleCard => {
@@ -340,7 +330,7 @@ const charactersFetch = (urlBase, collection, apiKey, sort) => {
     noResults(characters);
 
     offset = data.data.offset;
-    updatePaginationButtons()
+    updatePaginationButtonsAttribute()
 
     const charactersCards = document.querySelectorAll('.character-card');
     charactersCards.forEach(singleCard => {
