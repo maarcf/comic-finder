@@ -17,6 +17,8 @@ const titleResults = document.querySelector('#title-results-section');
 // JS Variables//
 const urlBase ='https://gateway.marvel.com/v1/public/';
 const apiKey = '08b7060939db82c5ed50966d57a02ac5';
+let url = '';
+let queryParam = ''; 
 const imageSize = '/portrait_uncanny';
 const noInfo = 'No tenemos información para mostrar 😢';
 const resultsPerPage = 20;
@@ -219,6 +221,7 @@ searchForm.onsubmit = e => {
 
 // Other Fuctions //
 const resetOffset = () => currentPage = 0;
+const offsetNumber = (currentPage, resultsPerPage) => offset = currentPage * resultsPerPage;
 const noResults = result => {
   if (result.length === 0) {
     mainSection.innerHTML = `<h3>No se han encontrado resultados<h3>`;
@@ -250,21 +253,30 @@ firstPageButton.onclick = () => {
   resetOffset();
   // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
   // REVISAAAAAAAAAR //
-  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
+  offsetNumber(currentPage, resultsPerPage)
+  console.log('currPage', currentPage)
+  console.log('offset', offset)
+  comicsFetch(urlBase, 'comics', apiKey, offset, 'title');
 };
 
 previousPageButton.onclick = () => {
   currentPage--;
   // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
   // REVISAAAAAAAAAR //
-  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
+  offsetNumber(currentPage, resultsPerPage)
+  console.log('currPage', currentPage)
+  console.log('offset', offset)
+  comicsFetch(urlBase, 'comics', apiKey, offset, 'title');
 };
 
 nextPageButton.onclick = () => {
   currentPage++;
   // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
   // REVISAAAAAAAAAR //
-  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
+  offsetNumber(currentPage, resultsPerPage)
+  console.log('currPage', currentPage)
+  console.log('offset', offset)
+  comicsFetch(urlBase, 'comics', apiKey, offset, 'title');
 };
 
 lastPageButton.onclick = () => {
@@ -272,14 +284,67 @@ lastPageButton.onclick = () => {
   currentPage = remainder ? (totalCount - remainder) / resultsPerPage : (totalCount / resultsPerPage) - 1;
   // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
   // REVISAAAAAAAAAR //
-  comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
+  offsetNumber(currentPage, resultsPerPage)
+  console.log('currPage', currentPage)
+  console.log('offset', offset)
+  comicsFetch(urlBase, 'comics', apiKey, offset, 'title');
 };
 
 
+// create URL //
+const createURL = (baseUrl = urlBase, collection = 'comics', keyApi = apiKey, offset = 0, sort = 'title', textSearch = '', id = '', secondCollection = '') => {
+  url = `${baseUrl}${collection.value}`;
+  queryParam = `?apikey=${keyApi}&offset=${offset}`;
+
+  if (collection.value === 'comics') {
+    queryParam += `&orderBy=${sort.value}`;
+
+    if (Boolean(textSearch.value)) {
+      queryParam += `&titleStartsWith=${textSearch.value}`;
+      return url + queryParam;
+    }
+
+    if (id) {
+      queryParam = `?apikey=${keyApi}&offset=${offset}`;
+      url += `/${id}`;
+      
+      if (secondCollection) {
+        url += `/${secondCollection}`;
+        return url + queryParam;
+      }
+
+      return url + queryParam;
+    }
+    return url + queryParam;
+  }
+
+  if (collection.value === 'characters') {
+    queryParam += `&orderBy=${sort.value}`;
+
+    if (Boolean(textSearch.value)) {
+      queryParam += `&nameStartsWith=${textSearch.value}`;
+      return url + queryParam;
+    }
+
+    if (id) {
+      queryParam = `?apikey=${keyApi}&offset=${offset}`;
+      url += `/${id}`;
+      
+      if (secondCollection) {
+        url += `/${secondCollection}`;
+        return url + queryParam;
+      }
+      return url + queryParam;
+    }
+    return url + queryParam;
+  }
+  return url + queryParam;
+}
+
 
 // Fetchs //
-const comicsFetch = (urlBase, collection, apiKey, currentPage, resultsPerPage, sort) => {
-  fetch(`${urlBase}${collection}?apikey=${apiKey}&offset=${currentPage * resultsPerPage}&orderBy=${sort}`)
+const comicsFetch = (urlBase, selectType, apiKey, offset, selectSort) => {
+  fetch(createURL(urlBase, selectType, apiKey, offset, selectSort))
   .then(res => {
     showLoader(loaderOverlay, mainSection);
     return res.json();
@@ -296,14 +361,14 @@ const comicsFetch = (urlBase, collection, apiKey, currentPage, resultsPerPage, s
     hideLoader(loaderOverlay, mainSection);
     noResults(comics);
 
-    offset = data.data.offset;
     updatePaginationButtonsAttribute();
 
     const comicsCards = document.querySelectorAll('.comic-card');
     comicsCards.forEach(singleCard => {
       singleCard.onclick = () => {
         let comicId = singleCard.dataset.id;
-        singleResultFetch(urlBase, collection, comicId, apiKey);        
+        resetOffset();
+        singleResultFetch(urlBase, selectType.value, apiKey, offset,);        
       }
     })
   });
@@ -329,7 +394,6 @@ const charactersFetch = (urlBase, collection, apiKey, sort) => {
     hideLoader(loaderOverlay, mainSection);
     noResults(characters);
 
-    offset = data.data.offset;
     updatePaginationButtonsAttribute()
 
     const charactersCards = document.querySelectorAll('.character-card');
@@ -343,8 +407,8 @@ const charactersFetch = (urlBase, collection, apiKey, sort) => {
 };
 
 const singleResultFetch = (urlBase, collection, id, apiKey) => {
-  if (collection === 'comics') {
-    fetch(`${urlBase}${collection}/${id}?apikey=${apiKey}&offset=0`)
+//  if (collection === 'comics') {
+    fetch(createURL(urlBase, selectType, apiKey, offset, selectSort, '', id, ))
     .then(res => res.json())
     .then(data => { 
       console.log('Soy el data del singleResult', data)
@@ -364,20 +428,20 @@ const singleResultFetch = (urlBase, collection, id, apiKey) => {
         
       });  
     });
-  }
-  else {
-    fetch(`${urlBase}${collection}/${id}?apikey=${apiKey}&offset=0`)
-    .then(res => res.json())
-    .then(data => {    
-      console.log('soy el data en el singleResult', data)
-      let character = data.data.results;
-      cleanSection(singleResultSection);
-      character.map(info => {
-        createCharacterSection(info, noInfo);      
-      });
-      singleCharacterComicsFetch(urlBase, collection, id, 'comics', apiKey)
-    });
-  };  
+ // }
+  // else {
+  //   fetch(`${urlBase}${collection}/${id}?apikey=${apiKey}&offset=0`)
+  //   .then(res => res.json())
+  //   .then(data => {    
+  //     console.log('soy el data en el singleResult', data)
+  //     let character = data.data.results;
+  //     cleanSection(singleResultSection);
+  //     character.map(info => {
+  //       createCharacterSection(info, noInfo);      
+  //     });
+  //     singleCharacterComicsFetch(urlBase, collection, id, 'comics', apiKey)
+  //   });
+  // };  
 };
 
 // fetchComicsDeUnPersonaje
@@ -448,4 +512,4 @@ const singleComicCharactersFetch = (urlBase, idCollection, id, collection, apiKe
 
 
 showLoader(loaderOverlay, mainSection);
-comicsFetch(urlBase, 'comics', apiKey, currentPage, resultsPerPage, 'title');
+comicsFetch(urlBase, selectType.value, apiKey, offset, selectSort.value);
