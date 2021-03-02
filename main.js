@@ -15,8 +15,7 @@ const labelSort = selectSort.parentElement;
 const titleResults = document.querySelector('#title-results-section');
 
 // JS Variables//
-const urlBase ='https://gateway.marvel.com/v1/public/';
-const apiKey = '08b7060939db82c5ed50966d57a02ac5';
+
 let url = '';
 let queryParam = ''; 
 const imageSize = '/portrait_uncanny';
@@ -111,31 +110,25 @@ const createCharacterSection = (info,  noInfo,) => {
 const createSortSelect = (value, label, sort) => {
   if (value === 'comics') {
     label.setAttribute('aria-label', 'Ordenar comics por...');
-    sort.innerHTML = `
+    return (sort.innerHTML = `
     <option value="title" selected>A - Z</option>
     <option value="-title">Z - A</option>
     <option value="-focDate">Más nuevos</option>   
     <option value="focDate">Más viejos</option>
-    `;
+    `);
   }
   else {
     label.setAttribute('aria-label', 'Ordenar personajes por...');
-    sort.innerHTML = `
+    return(sort.innerHTML = `
     <option value="name" selected>A - Z</option>
     <option value="-name">Z - A</option>
-    `;
+    `);
   }
 }
 
 
 // Events //
-selectType.onchange = (value, label, sort) => { 
-  value = selectType.value;
-  label = labelSort;
-  sort = selectSort;
-
-  createSortSelect(value, label, sort);   
-} 
+selectType.onchange = () => createSortSelect(selectType.value, labelSort, selectSort);
 
 searchForm.onsubmit = e => {
   e.preventDefault();
@@ -291,60 +284,86 @@ lastPageButton.onclick = () => {
 };
 
 
+
+
 // create URL //
-const createURL = (baseUrl = urlBase, collection = 'comics', keyApi = apiKey, offset = 0, sort = 'title', textSearch = '', id = '', secondCollection = '') => {
-  url = `${baseUrl}${collection.value}`;
-  queryParam = `?apikey=${keyApi}&offset=${offset}`;
+const createURL = (collection = 'comics', id = false, secondCollection = false) => {
+  const urlBase ='https://gateway.marvel.com/v1/public/';
+  const type = collection.value;
+  let hasQueryParam = false;
+  url = `${urlBase}${type || collection}`;
+  queryParam = createQueryParam(hasQueryParam);
+  
+  if (id) {
+    url += `/${id}`;
 
-  if (collection.value === 'comics') {
-    queryParam += `&orderBy=${sort.value}`;
-
-    if (Boolean(textSearch.value)) {
-      queryParam += `&titleStartsWith=${textSearch.value}`;
-      return url + queryParam;
+    if (secondCollection) {
+      url += `/${secondCollection}`;        
     }
-
-    if (id) {
-      queryParam = `?apikey=${keyApi}&offset=${offset}`;
-      url += `/${id}`;
-      
-      if (secondCollection) {
-        url += `/${secondCollection}`;
-        return url + queryParam;
-      }
-
-      return url + queryParam;
-    }
+    console.log('LA URL FINAL ES: ', url + queryParam);
     return url + queryParam;
   }
-
-  if (collection.value === 'characters') {
-    queryParam += `&orderBy=${sort.value}`;
-
-    if (Boolean(textSearch.value)) {
-      queryParam += `&nameStartsWith=${textSearch.value}`;
-      return url + queryParam;
-    }
-
-    if (id) {
-      queryParam = `?apikey=${keyApi}&offset=${offset}`;
-      url += `/${id}`;
-      
-      if (secondCollection) {
-        url += `/${secondCollection}`;
-        return url + queryParam;
-      }
-      return url + queryParam;
-    }
+  else {
+    console.log('No hay id por eso tiene otros parametros a sumarse')
+    hasQueryParam = true;
+    queryParam = createQueryParam(hasQueryParam);
+    console.log('LA URL FINAL ES: ', url + queryParam);
     return url + queryParam;
-  }
-  return url + queryParam;
+  };
 }
+
+const createQueryParam = boolean => {
+  const apiKey = '08b7060939db82c5ed50966d57a02ac5';
+  const sort = selectSort.value;
+  const type = selectType.value;
+  const textSearch = textSearchInput.value;
+  const offNum = offset;
+  console.log('estas en queryParam, el offset es de ', offNum);
+
+  queryParam = `?apikey=${apiKey}&offset=${offNum}`;
+  
+  if (type === 'comics' && boolean) {
+    queryParam += `&orderBy=${sort}`;
+  }
+
+  if (type === 'characters' && boolean) {
+    queryParam += `&orderBy=${sort}`;
+  }
+
+  if (Boolean(textSearch)) {
+    type === 'comics' ? queryParam += `&titleStartsWith=${textSearch}` :
+    queryParam += `&nameStartsWith=${textSearch}`;
+  }
+
+  return queryParam;    
+}
+
+createURL(selectType);
+
+
+
 
 
 // Fetchs //
-const comicsFetch = (urlBase, selectType, apiKey, offset, selectSort) => {
-  fetch(createURL(urlBase, selectType, apiKey, offset, selectSort))
+
+const collectionFetch = (collection, id, secondCollection) => {
+  fetch(createURL(collection, id, secondCollection))
+  .then(res => {
+    showLoader(loaderOverlay, mainSection);
+    return res.json();
+  })
+  .then(data => {
+
+  })
+
+}
+
+
+const comicsFetch = (urlBase, collection = 'comics', apiKey, offset, sort, inputSearch) => {
+  
+  let completeURL = createURL(urlBase, collection, apiKey, offset, sort, inputSearch, '', '')
+
+  fetch(completeURL)
   .then(res => {
     showLoader(loaderOverlay, mainSection);
     return res.json();
@@ -352,6 +371,7 @@ const comicsFetch = (urlBase, selectType, apiKey, offset, selectSort) => {
   .then(data => {
     
     console.log(data)
+
     let comics = data.data.results;
     totalCount = data.data.total;  
     titleResults.textContent = 'Resultados';
@@ -360,7 +380,6 @@ const comicsFetch = (urlBase, selectType, apiKey, offset, selectSort) => {
     createComicsCards(comics);
     hideLoader(loaderOverlay, mainSection);
     noResults(comics);
-
     updatePaginationButtonsAttribute();
 
     const comicsCards = document.querySelectorAll('.comic-card');
@@ -368,7 +387,7 @@ const comicsFetch = (urlBase, selectType, apiKey, offset, selectSort) => {
       singleCard.onclick = () => {
         let comicId = singleCard.dataset.id;
         resetOffset();
-        singleResultFetch(urlBase, selectType.value, apiKey, offset,);        
+        singleResultFetch(urlBase, collection, apiKey, offset, '', '', comicId, '');        
       }
     })
   });
@@ -406,9 +425,12 @@ const charactersFetch = (urlBase, collection, apiKey, sort) => {
   });
 };
 
-const singleResultFetch = (urlBase, collection, id, apiKey) => {
+const singleResultFetch = (urlBase, collection, apiKey, offset, sort, input, comicId, second) => {
 //  if (collection === 'comics') {
-    fetch(createURL(urlBase, selectType, apiKey, offset, selectSort, '', id, ))
+
+  let completeURL = createURL(urlBase, collection, apiKey, offset, '', '', comicId, '')
+
+    fetch(completeURL)
     .then(res => res.json())
     .then(data => { 
       console.log('Soy el data del singleResult', data)
@@ -424,7 +446,7 @@ const singleResultFetch = (urlBase, collection, id, apiKey) => {
         dateSale = new Date(dateSale.date).toLocaleDateString();
 
         createComicSection(info, noInfo, authors, dateSale);
-        singleComicCharactersFetch(urlBase, collection, id, 'characters', apiKey)
+        singleComicCharactersFetch(urlBase, collection, apiKey, offset, '', '', comicId, 'characters')
         
       });  
     });
@@ -476,8 +498,9 @@ const singleCharacterComicsFetch = (urlBase, idCollection, id, collection, apiKe
 };
 
 // fetchCharactersDeUnComic
-const singleComicCharactersFetch = (urlBase, idCollection, id, collection, apiKey) => {
-  fetch(`${urlBase}${idCollection}/${id}/${collection}?apikey=${apiKey}&offset=0`)
+const singleComicCharactersFetch = (urlBase, collection, apiKey, offset, sort, input, comicId, secondColl) => {
+  let completeURL = createURL(urlBase, collection, apiKey, offset, '', '', comicId, secondColl)
+  fetch(completeURL)
   .then(res => {
     showLoader(loaderOverlay, mainSection);
     return res.json()
@@ -495,8 +518,6 @@ const singleComicCharactersFetch = (urlBase, idCollection, id, collection, apiKe
     createCharactersCards(characters);  
     hideLoader(loaderOverlay, mainSection);
     noResults(characters);
-    // isDisabled(firstPageButton);
-    // isDisabled(previousPageButton);
 
     const charactersCards = document.querySelectorAll('.character-card');
     charactersCards.forEach(singleCard => {
@@ -511,5 +532,6 @@ const singleComicCharactersFetch = (urlBase, idCollection, id, collection, apiKe
 
 
 
-showLoader(loaderOverlay, mainSection);
-comicsFetch(urlBase, selectType.value, apiKey, offset, selectSort.value);
+//showLoader(loaderOverlay, mainSection);
+//comicsFetch(urlBase, selectType, apiKey, offset, selectSort);
+
