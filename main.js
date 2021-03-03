@@ -54,6 +54,8 @@ const isEnabled = button => {
 
 // create HTML //
 const createCharactersCards = characters => {
+  textSearchInput.value = '';
+  //cleanSection(singleResultSection);
   cleanSection(mainSection);
   characters.map(character => {
     mainSection.innerHTML += `
@@ -67,6 +69,8 @@ const createCharactersCards = characters => {
 };
 
 const createComicsCards = comics => {
+  textSearchInput.value = '';
+  //cleanSection(singleResultSection);
   cleanSection(mainSection);
   comics.map(comic => {
     mainSection.innerHTML += `
@@ -132,84 +136,52 @@ selectType.onchange = () => createSortSelect(selectType.value, labelSort, select
 
 searchForm.onsubmit = e => {
   e.preventDefault();
-  let sort = selectSort.value;
-  let collection = selectType.value;
+  cleanSection(singleResultSection);
+  collectionFetch(selectType);
+};
 
-  // COMICS BUSCA POR NOMBRE Y SIN NOMBRE //
-  if (collection === 'comics') {
-    if (Boolean(textSearchInput.value)) {
-      // ESTO ES LO MISMO QUE COMICSFETCH() CAMBIA LA RUTA DE LA API. PENSAR COMO MEJORARLO PARA NO REPETIR CODIGO
-      fetch(`${urlBase}${collection}?apikey=${apiKey}&offset=0&orderBy=${sort}&titleStartsWith=${textSearchInput.value}`)
-      .then(res => {
-        showLoader(loaderOverlay, mainSection);
-        return res.json();
-      })
-      .then(data => {
-        
-        console.log('Soy data del onsubmit', data)
-        let comics = data.data.results;
-        totalCount = data.data.total;  
-        titleResults.textContent = 'Resultados';
-        totalResults.textContent = `${totalCount} RESULTADOS`
 
-        cleanSection(singleResultSection);
-        createComicsCards(comics);
-        noResults(comics);
-        hideLoader(loaderOverlay, mainSection);
-        // isDisabled(firstPageButton);
-        // isDisabled(previousPageButton);
+// Pagination //
+firstPageButton.onclick = () => {
+  resetOffset();
+  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
+  // REVISAAAAAAAAAR //
+  offsetNumber(currentPage, resultsPerPage)
+  console.log('currPage', currentPage)
+  console.log('offset', offset)
+  collectionFetch(selectType);
+};
 
-        const comicsCards = document.querySelectorAll('.comic-card');
-        comicsCards.forEach(singleCard => {
-          singleCard.onclick = () => {
-            let comicId = singleCard.dataset.id;
-            singleResultFetch(urlBase, collection, comicId, apiKey);        
-          };
-        });
-      });
-    }
-    else {
-      cleanSection(singleResultSection);
-      comicsFetch(urlBase, collection, apiKey, currentPage, resultsPerPage, sort);
-    }
-  }
-  else {
-    if (Boolean(textSearchInput.value)) {
-      fetch(`${urlBase}${collection}?apikey=${apiKey}&offset=0&orderBy=${sort}&nameStartsWith=${textSearchInput.value}`)
-      .then(res => {
-        showLoader(loaderOverlay, mainSection);
-        return res.json()
-      })
-      .then(data => {
-        
-        console.log('Soy data del form', data)
+previousPageButton.onclick = () => {
+  currentPage--;
+  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
+  // REVISAAAAAAAAAR //
+  offsetNumber(currentPage, resultsPerPage)
+  console.log('currPage', currentPage)
+  console.log('offset', offset)
+  collectionFetch(selectType);
+};
 
-        let characters = data.data.results;
-        totalCount = data.data.total;
-        titleResults.textContent = 'Resultados';
-        totalResults.textContent = `${totalCount} RESULTADOS`;
+nextPageButton.onclick = () => {
+  currentPage++;
+  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
+  // REVISAAAAAAAAAR //
+  offsetNumber(currentPage, resultsPerPage)
+  console.log('currPage', currentPage)
+  console.log('offset', offset)
+  collectionFetch(selectType);
+};
 
-        cleanSection(singleResultSection);
-        createCharactersCards(characters);  
-        hideLoader(loaderOverlay, mainSection);
-        noResults(characters);
-
-        const charactersCards = document.querySelectorAll('.character-card');
-        charactersCards.forEach(singleCard => {
-          singleCard.onclick = () => {
-          let characterId = singleCard.dataset.id;
-          singleResultFetch(urlBase, collection, characterId, apiKey);        
-          };
-        });
-      });
-    }
-    else {      
-      cleanSection(singleResultSection);
-      charactersFetch(urlBase, collection, apiKey, sort);
-    }
-
-  }
-}
+lastPageButton.onclick = () => {
+  let remainder = totalCount % resultsPerPage;
+  currentPage = remainder ? (totalCount - remainder) / resultsPerPage : (totalCount / resultsPerPage) - 1;
+  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
+  // REVISAAAAAAAAAR //
+  offsetNumber(currentPage, resultsPerPage)
+  console.log('currPage', currentPage)
+  console.log('offset', offset)
+  collectionFetch(selectType);
+};
 
 
 // Other Fuctions //
@@ -241,58 +213,13 @@ const updatePaginationButtonsAttribute = () => {
 };
 
 
-// Pagination //
-firstPageButton.onclick = () => {
-  resetOffset();
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  offsetNumber(currentPage, resultsPerPage)
-  console.log('currPage', currentPage)
-  console.log('offset', offset)
-  comicsFetch(urlBase, 'comics', apiKey, offset, 'title');
-};
-
-previousPageButton.onclick = () => {
-  currentPage--;
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  offsetNumber(currentPage, resultsPerPage)
-  console.log('currPage', currentPage)
-  console.log('offset', offset)
-  comicsFetch(urlBase, 'comics', apiKey, offset, 'title');
-};
-
-nextPageButton.onclick = () => {
-  currentPage++;
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  offsetNumber(currentPage, resultsPerPage)
-  console.log('currPage', currentPage)
-  console.log('offset', offset)
-  collectionFetch(selectType)
-};
-
-lastPageButton.onclick = () => {
-  let remainder = totalCount % resultsPerPage;
-  currentPage = remainder ? (totalCount - remainder) / resultsPerPage : (totalCount / resultsPerPage) - 1;
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  offsetNumber(currentPage, resultsPerPage)
-  console.log('currPage', currentPage)
-  console.log('offset', offset)
-  comicsFetch(urlBase, 'comics', apiKey, offset, 'title');
-};
-
-
-
-
 // create URL //
 const createURL = (collection = 'comics', id = false, secondCollection = false) => {
   const urlBase ='https://gateway.marvel.com/v1/public/';
   const type = collection.value;
-  let hasQueryParam = false;
+  let hasOthersQueriesParam = false;
   url = `${urlBase}${type || collection}`;
-  queryParam = createQueryParam(hasQueryParam);
+  queryParam = createQueryParam(hasOthersQueriesParam);
   
   if (id) {
     url += `/${id}`;
@@ -305,12 +232,12 @@ const createURL = (collection = 'comics', id = false, secondCollection = false) 
   }
   else {
     console.log('No hay id por eso tiene otros parametros a sumarse')
-    hasQueryParam = true;
-    queryParam = createQueryParam(hasQueryParam);
+    hasOthersQueriesParam = true;
+    queryParam = createQueryParam(hasOthersQueriesParam);
     console.log('LA URL FINAL ES: ', url + queryParam);
     return url + queryParam;
   };
-}
+};
 
 const createQueryParam = boolean => {
   const apiKey = '08b7060939db82c5ed50966d57a02ac5';
@@ -336,9 +263,9 @@ const createQueryParam = boolean => {
   }
 
   return queryParam;    
-}
+};
 
-// 
+// Display Comics and Characters //
 const showComics = (data, secondCollection) => {
   console.log(data)
 
@@ -420,24 +347,32 @@ const showOneCharacter = (data, id) => {
 
 // Fetchs //
 
-const collectionFetch = (collection, id, secondCollection) => {
+const collectionFetch = (collection, id, secondCollection) => {  
   let type = collection.value;
   fetch(createURL(collection, id, secondCollection))
-  .then(res => res.json())
+  .then(res => {
+    showLoader(loaderOverlay, mainSection);
+    return res.json();
+  })
   .then(data => {
-    type === 'comics' ? showComics(data) : showCharacters(data);
-    if (secondCollection) {
-      collection === 'comics' ? showCharacters(data, secondCollection) : showComics(data, secondCollection);
-    };
+    if (id) {
+      secondCollection === 'comics' ? showComics(data, secondCollection) : showCharacters(data,secondCollection);
+    }
+    else {
+      `${type || collection}` === 'comics' ? showComics(data) : showCharacters(data);
+    };   
   });
 };
 
 const singleResultFetch = (collection, id) => {
   fetch(createURL(collection, id))
-  .then(res => res.json())
-  .then(data => collection === 'comics' ? showOneComic(data, id) : showOneCharacter(data, id))
-}
+  .then(res => {
+    showLoader(loaderOverlay, mainSection);
+    return res.json();
+  })
+  .then(data => collection === 'comics' ? showOneComic(data, id) : showOneCharacter(data, id));
+};
 
-
-//showLoader(loaderOverlay, mainSection);
+// Start page //
+showLoader(loaderOverlay, mainSection);
 collectionFetch(selectType);
