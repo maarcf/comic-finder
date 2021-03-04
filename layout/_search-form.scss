@@ -18,6 +18,7 @@
         padding: 8px 8px 8px 35px;
         font-size: 22px;
         width: 450px;
+        transition: $dark-mode-transition;
 
         @media (max-width: $medium-breakpoint) {
           width: 100%;

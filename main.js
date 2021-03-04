@@ -15,7 +15,6 @@ const labelSort = selectSort.parentElement;
 const titleResults = document.querySelector('#title-results-section');
 const darkModeButton = document.querySelector('.dark-mode-button');
 const spanInside = darkModeButton.children[0];
-console.log(darkModeButton, spanInside)
 
 // JS Variables //
 let url = '';
@@ -26,6 +25,8 @@ const resultsPerPage = 20;
 let currentPage = 0;
 let totalCount = 0;
 let offset = 0;
+const theme = {};
+console.log(theme)
 
 // Loader //
 const showLoader = (overlay, section) => {
@@ -140,11 +141,10 @@ searchForm.onsubmit = e => {
   collectionFetch(selectType);
 };
 
-
 darkModeButton.onclick = e => {
   let isChecked = e.target.getAttribute('aria-checked');
   isChecked ? addDarkMode() : removeDarkMode();
-}
+};
 
 
 // Pagination //
@@ -190,23 +190,35 @@ lastPageButton.onclick = () => {
 };
 
 // Other Fuctions //
+const saveDarkMode = boolean => {
+  theme.hasDarkMode = boolean;
+  localStorage.setItem('theme', JSON.stringify(theme));
+}
+
 const addDarkMode = () => {
   document.body.classList.add('dark-mode');
   darkModeButton.setAttribute('aria-checked', true);
   spanInside.style.transform = 'translateX(0)';
+  saveDarkMode(true);
 }
+
 const removeDarkMode = () => {
   document.body.classList.remove('dark-mode');
   darkModeButton.setAttribute('aria-checked', false);
   spanInside.style.transform = 'translateX(-25px)';
+  saveDarkMode(false);
 }
+
 const resetOffset = () => currentPage = 0;
+
 const offsetNumber = (currentPage, resultsPerPage) => offset = currentPage * resultsPerPage;
+
 const noResults = result => {
   if (result.length === 0) {
     mainSection.innerHTML = `<h3>No se han encontrado resultados<h3>`;
   };
 };
+
 const updatePaginationButtonsAttribute = () => {
   if (currentPage === 0) {
     isDisabled(firstPageButton);
@@ -389,3 +401,10 @@ const singleResultFetch = (collection, id) => {
 // Start page //
 showLoader(loaderOverlay, mainSection);
 collectionFetch(selectType);
+
+// Check Dark Mode //
+let themeSaved = localStorage.getItem('theme');
+themeSaved = JSON.parse(themeSaved);
+if (themeSaved.hasDarkMode) {
+  addDarkMode();
+}
