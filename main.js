@@ -14,8 +14,7 @@ const selectSort = document.querySelector('#search-sort');
 const labelSort = selectSort.parentElement;
 const titleResults = document.querySelector('#title-results-section');
 
-// JS Variables//
-
+// JS Variables //
 let url = '';
 let queryParam = ''; 
 const imageSize = '/portrait_uncanny';
@@ -24,6 +23,8 @@ const resultsPerPage = 20;
 let currentPage = 0;
 let totalCount = 0;
 let offset = 0;
+
+setTimeout(() => document.body.classList.add('dark-mode'), 5000)
 
 // Loader //
 const showLoader = (overlay, section) => {
@@ -55,7 +56,6 @@ const isEnabled = button => {
 // create HTML //
 const createCharactersCards = characters => {
   textSearchInput.value = '';
-  //cleanSection(singleResultSection);
   cleanSection(mainSection);
   characters.map(character => {
     mainSection.innerHTML += `
@@ -70,7 +70,6 @@ const createCharactersCards = characters => {
 
 const createComicsCards = comics => {
   textSearchInput.value = '';
-  //cleanSection(singleResultSection);
   cleanSection(mainSection);
   comics.map(comic => {
     mainSection.innerHTML += `
@@ -183,7 +182,6 @@ lastPageButton.onclick = () => {
   collectionFetch(selectType);
 };
 
-
 // Other Fuctions //
 const resetOffset = () => currentPage = 0;
 const offsetNumber = (currentPage, resultsPerPage) => offset = currentPage * resultsPerPage;
@@ -211,7 +209,6 @@ const updatePaginationButtonsAttribute = () => {
     isEnabled(lastPageButton);
   };
 };
-
 
 // create URL //
 const createURL = (collection = 'comics', id = false, secondCollection = false) => {
@@ -346,7 +343,6 @@ const showOneCharacter = (data, id) => {
 }
 
 // Fetchs //
-
 const collectionFetch = (collection, id, secondCollection) => {  
   let type = collection.value;
   fetch(createURL(collection, id, secondCollection))
