@@ -13,6 +13,9 @@ const selectType = document.querySelector('#search-type');
 const selectSort = document.querySelector('#search-sort');
 const labelSort = selectSort.parentElement;
 const titleResults = document.querySelector('#title-results-section');
+const darkModeButton = document.querySelector('.dark-mode-button');
+const spanInside = darkModeButton.children[0];
+console.log(darkModeButton, spanInside)
 
 // JS Variables //
 let url = '';
@@ -23,8 +26,6 @@ const resultsPerPage = 20;
 let currentPage = 0;
 let totalCount = 0;
 let offset = 0;
-
-setTimeout(() => document.body.classList.add('dark-mode'), 5000)
 
 // Loader //
 const showLoader = (overlay, section) => {
@@ -59,7 +60,7 @@ const createCharactersCards = characters => {
   cleanSection(mainSection);
   characters.map(character => {
     mainSection.innerHTML += `
-    <article class="character-card" data-id="${character.id}">
+    <article class="character-card" data-id="${character.id}" tabindex="0">
       <div class="character-img-container">
         <img class="character-img" src="${character.thumbnail.path + imageSize}.${character.thumbnail.extension}" alt="Personaje de Marvel: ${character.name}" />
       </div>
@@ -73,7 +74,7 @@ const createComicsCards = comics => {
   cleanSection(mainSection);
   comics.map(comic => {
     mainSection.innerHTML += `
-    <article class="comic-card" data-id="${comic.id}">
+    <article class="comic-card" data-id="${comic.id}" tabindex="0">
       <div class="comic-img-container">
         <img class="comic-img" src="${comic.thumbnail.path + imageSize}.${comic.thumbnail.extension}" alt="Portada del Comic: ${comic.title}" />
       </div>
@@ -140,6 +141,12 @@ searchForm.onsubmit = e => {
 };
 
 
+darkModeButton.onclick = e => {
+  let isChecked = e.target.getAttribute('aria-checked');
+  isChecked ? addDarkMode() : removeDarkMode();
+}
+
+
 // Pagination //
 firstPageButton.onclick = () => {
   resetOffset();
@@ -183,6 +190,16 @@ lastPageButton.onclick = () => {
 };
 
 // Other Fuctions //
+const addDarkMode = () => {
+  document.body.classList.add('dark-mode');
+  darkModeButton.setAttribute('aria-checked', true);
+  spanInside.style.transform = 'translateX(0)';
+}
+const removeDarkMode = () => {
+  document.body.classList.remove('dark-mode');
+  darkModeButton.setAttribute('aria-checked', false);
+  spanInside.style.transform = 'translateX(-25px)';
+}
 const resetOffset = () => currentPage = 0;
 const offsetNumber = (currentPage, resultsPerPage) => offset = currentPage * resultsPerPage;
 const noResults = result => {

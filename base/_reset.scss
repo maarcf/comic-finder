@@ -1,7 +1,34 @@
 * {
   margin: 0;
   padding: 0;
-  color: $main-color;
   font-family: $text-typograhy;
   outline-color: $detail-color;
+}
+
+body {
+  color: $main-color;
+}
+
+// DARK MODE //
+.dark-mode {
+  background-color: $dark-mode-background-color;
+  color: $dark-mode-main-color;
+  transition: $dark-mode-transition;
+ 
+  p {
+    color: $dark-mode-secondary-color;
+  }
+
+  input[type=search] {
+    background-color: $dark-mode-background-color;
+    transition: $dark-mode-transition
+  }
+
+  button {
+    border: 1px solid $dark-mode-main-color
+  }
+
+  .overlay {
+    background-color: rgba(47, 52, 55, .8);
+  }
 }

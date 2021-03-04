@@ -21,3 +21,10 @@
   font-size: $small-font-size;
   transition: $card-transition;
 }
+
+@mixin before-and-after-position ($value) {
+  content: $value;
+  font-size: 10px;
+  position: absolute;
+  top: 5px;
+}

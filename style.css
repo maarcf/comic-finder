@@ -5,7 +5,7 @@
   align-items: center;
 }
 
-.search-form .selects-options label, main .total-results {
+.search-form .selects-options label, main .total-results, .container-dark-mode p {
   font-size: 14px;
   color: #757575;
   font-weight: 700;
@@ -30,9 +30,31 @@ main, header, footer, .character-card, .comic-card {
 * {
   margin: 0;
   padding: 0;
-  color: #151515;
   font-family: "Roboto", sans-serif;
   outline-color: #ed1d23;
+}
+
+body {
+  color: #151515;
+}
+
+.dark-mode {
+  background-color: #2F3437;
+  color: #E8E8E8;
+  transition: 0.8s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+}
+.dark-mode p {
+  color: #C3CBD4;
+}
+.dark-mode input[type=search] {
+  background-color: #2F3437;
+  transition: 0.8s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+}
+.dark-mode button {
+  border: 1px solid #E8E8E8;
+}
+.dark-mode .overlay {
+  background-color: rgba(47, 52, 55, 0.8);
 }
 
 .overlay {
@@ -198,6 +220,55 @@ main, header, footer, .character-card, .comic-card {
   }
 }
 
+.container-dark-mode {
+  display: flex;
+  align-items: center;
+}
+.container-dark-mode p {
+  margin-right: 10px;
+}
+.container-dark-mode .dark-mode-button {
+  position: relative;
+  width: 53px;
+  height: 26px;
+  padding: 2px 5px;
+  border: 2px solid #151515;
+  border-radius: 50px;
+  color: #ffffff;
+  cursor: pointer;
+}
+.container-dark-mode .dark-mode-button[aria-checked=false] {
+  background-color: #777777;
+}
+.container-dark-mode .dark-mode-button[aria-checked=false]::after {
+  content: "OFF";
+  font-size: 10px;
+  position: absolute;
+  top: 5px;
+  right: 6px;
+}
+.container-dark-mode .dark-mode-button[aria-checked=true] {
+  background-color: #04ad50;
+}
+.container-dark-mode .dark-mode-button[aria-checked=true]::after {
+  content: "ON";
+  font-size: 10px;
+  position: absolute;
+  top: 5px;
+  left: 6px;
+}
+.container-dark-mode .dark-mode-button span {
+  width: 20px;
+  height: 20px;
+  background-color: #151515;
+  border-radius: 50%;
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  transition: 0.3s;
+  transform: translateX(-25px);
+}
+
 footer {
   align-items: center;
   background-color: #151515;
@@ -250,12 +321,13 @@ main {
 main h2 {
   margin-bottom: 20px;
 }
+main .title-container {
+  display: flex;
+  justify-content: space-between;
+}
 @media (max-width: 660px) {
   main {
-    margin: 0 20px 40px;
-  }
-  main h2 {
-    margin-top: 40px;
+    margin: 40px 20px 40px;
   }
 }
 

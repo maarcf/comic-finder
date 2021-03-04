@@ -1,0 +1,46 @@
+.container-dark-mode {
+  display: flex;
+  align-items: center;
+
+  p {
+    @extend %secondary-typography-style;
+    margin-right: 10px;
+  }
+
+  .dark-mode-button {
+    position: relative;
+    @include size(53px, 26px);
+    padding: 2px 5px;
+    border: 2px solid $main-color;
+    border-radius: 50px;
+    color: $secondary-detail-color;
+    cursor: pointer;
+
+    &[aria-checked=false] {
+      background-color: #777777;
+      &::after {
+        @include before-and-after-position('OFF');
+        right: 6px;;
+      }
+    }
+
+    &[aria-checked=true] {
+      background-color: #04ad50;
+      &::after {
+        @include before-and-after-position('ON');
+        left: 6px;
+      }
+    }
+
+    span {
+      @include size(20px, 20px);      
+      background-color: $main-color;
+      border-radius: 50%;
+      position: absolute;
+      top: 1px;
+      right: 2px;
+      transition: .3s;
+      transform: translateX(-25px);
+    }
+  }
+}
