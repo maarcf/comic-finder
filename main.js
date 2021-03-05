@@ -315,29 +315,27 @@ const createQueryParam = boolean => {
   const type = selectType.value;
   const textSearch = textSearchInput.value;
   const offNum = offset;
-  console.log('estas en queryParam, el offset es de ', offNum);
 
   queryParam = `?apikey=${apiKey}&offset=${offNum}`;
   
   if (type === 'comics' && boolean) {
     queryParam += `&orderBy=${sort}`;
-  }
+  };
 
   if (type === 'characters' && boolean) {
     queryParam += `&orderBy=${sort}`;
-  }
+  };
 
   if (Boolean(textSearch)) {
     type === 'comics' ? queryParam += `&titleStartsWith=${textSearch}` :
     queryParam += `&nameStartsWith=${textSearch}`;
-  }
+  };
 
   return queryParam;    
 };
 
 // Display Comics and Characters //
 const showComics = (data, secondCollection) => {
-  console.log(data)
 
   let comics = data.data.results;
   totalCount = data.data.total;
@@ -360,7 +358,7 @@ const showComics = (data, secondCollection) => {
 };
 
 const showCharacters = (data, secondCollection) => {
-  console.log(data)
+
   let characters = data.data.results;
   totalCount = data.data.total;
   totalResults.textContent = `${totalCount} RESULTADOS`;
@@ -375,18 +373,14 @@ const showCharacters = (data, secondCollection) => {
   charactersCards.forEach(singleCard => {
     singleCard.onclick = () => {
       let characterId = singleCard.dataset.id;
-      console.log(offset);
       resetOffset();
-      console.log(offset);
       singleResultFetch('characters', characterId);        
     };
   });
 };
 
 const showOneComic = (data, id) => {
-  console.log('estas en showOneComic');
   let comic = data.data.results;
-  console.log(comic);
   comic.map(info => {
   cleanSection(singleResultSection);
 
@@ -406,9 +400,7 @@ const showOneComic = (data, id) => {
 };
 
 const showOneCharacter = (data, id) => {
-  console.log('Estas en showOneCharacter')
   let character = data.data.results;
-  console.log(character);
   cleanSection(singleResultSection);
   character.map(info => {
     createCharacterSection(info, noInfo);      
