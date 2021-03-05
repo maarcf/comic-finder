@@ -61,10 +61,18 @@ body {
 .overlay {
   background-color: rgba(255, 255, 255, 0.5);
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  top: -60px;
+  bottom: -80px;
+  left: -75px;
+  right: -75px;
+}
+@media (max-width: 660px) {
+  .overlay {
+    top: -40px;
+    bottom: -40px;
+    left: -20px;
+    right: -20px;
+  }
 }
 .overlay .loader {
   border: 8px solid transparent;
@@ -101,6 +109,10 @@ body {
   width: calc(100% / 5 - 2 * 10px);
   margin: 0 10px 40px;
   cursor: pointer;
+  outline: none;
+}
+.comic-card:focus {
+  box-shadow: 0 0 20px 5px #ed1d23;
 }
 .comic-card .comic-img-container {
   margin-bottom: 20px;
@@ -117,10 +129,10 @@ body {
   font-size: 14px;
   transition: all 0.2s;
 }
-.comic-card:hover .comic-img-container .comic-img {
+.comic-card:hover .comic-img-container .comic-img, .comic-card:focus .comic-img-container .comic-img {
   transform: translateY(-10px);
 }
-.comic-card:hover .comic-title {
+.comic-card:hover .comic-title, .comic-card:focus .comic-title {
   color: #ed1d23;
 }
 @media (max-width: 660px) {
@@ -138,6 +150,10 @@ body {
   width: calc(100% / 5 - 2 * 10px);
   margin: 0 10px 40px;
   cursor: pointer;
+  outline: none;
+}
+.character-card:focus {
+  box-shadow: 0 0 20px 5px #ed1d23;
 }
 .character-card .character-img-container {
   border-bottom: 4px solid #ed1d23;
@@ -157,10 +173,10 @@ body {
   background-color: #151515;
   color: #ffffff;
 }
-.character-card:hover .character-img-container .character-img {
+.character-card:hover .character-img-container .character-img, .character-card:focus .character-img-container .character-img {
   transform: scale(1.1);
 }
-.character-card:hover .character-name {
+.character-card:hover .character-name, .character-card:focus .character-name {
   background-color: #ed1d23;
 }
 @media (min-width: 1024px) {
@@ -328,7 +344,7 @@ main .title-container {
 }
 @media (max-width: 660px) {
   main {
-    margin: 40px 20px 40px;
+    margin: 40px 20px;
   }
 }
 

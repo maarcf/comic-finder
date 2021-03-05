@@ -26,7 +26,11 @@ let currentPage = 0;
 let totalCount = 0;
 let offset = 0;
 const theme = {};
-console.log(theme)
+const fetchInfo = {
+  url: {},
+  query: {}
+};
+
 
 // Loader //
 const showLoader = (overlay, section) => {
@@ -138,7 +142,13 @@ selectType.onchange = () => createSortSelect(selectType.value, labelSort, select
 searchForm.onsubmit = e => {
   e.preventDefault();
   cleanSection(singleResultSection);
-  collectionFetch(selectType);
+  resetOffset();
+  let type = selectType.value;
+  let sort = selectSort.value;
+  let inputText = textSearchInput.value;
+  sessionStorage.clear();
+  saveFetchInfo(type, '', '', sort, inputText);  
+  showInfo();
 };
 
 darkModeButton.onclick = e => {
@@ -150,46 +160,77 @@ darkModeButton.onclick = e => {
 // Pagination //
 firstPageButton.onclick = () => {
   resetOffset();
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  offsetNumber(currentPage, resultsPerPage)
-  console.log('currPage', currentPage)
-  console.log('offset', offset)
-  collectionFetch(selectType);
+  offsetNumber(currentPage, resultsPerPage);
+  showInfo();
 };
 
 previousPageButton.onclick = () => {
   currentPage--;
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  offsetNumber(currentPage, resultsPerPage)
-  console.log('currPage', currentPage)
-  console.log('offset', offset)
-  collectionFetch(selectType);
+  offsetNumber(currentPage, resultsPerPage);
+  showInfo();
 };
 
 nextPageButton.onclick = () => {
   currentPage++;
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  offsetNumber(currentPage, resultsPerPage)
-  console.log('currPage', currentPage)
-  console.log('offset', offset)
-  collectionFetch(selectType);
+  offsetNumber(currentPage, resultsPerPage);
+  showInfo();
 };
+
+
 
 lastPageButton.onclick = () => {
   let remainder = totalCount % resultsPerPage;
   currentPage = remainder ? (totalCount - remainder) / resultsPerPage : (totalCount / resultsPerPage) - 1;
-  // en realidad tendria que ser dependiendo si es personaje o comic el fetch // 
-  // REVISAAAAAAAAAR //
-  offsetNumber(currentPage, resultsPerPage)
-  console.log('currPage', currentPage)
-  console.log('offset', offset)
-  collectionFetch(selectType);
+  offsetNumber(currentPage, resultsPerPage);
+  showInfo();
 };
 
 // Other Fuctions //
+const showInfo = () => {
+  fetchJSON = JSON.parse(sessionStorage.getItem('fetchInfo'));
+  console.log('soy fetchJSON', fetchJSON)
+  if (!fetchJSON) {
+    collectionFetch(selectType);
+  }
+  else {
+    const { collection, id, secondCollection } = fetchJSON.url;
+    const { sort, title, name } = fetchJSON.query;
+    console.log(collection, id, secondCollection);
+    console.log(sort, title, name);
+
+    if (id) {
+      collectionFetch(collection, id, secondCollection);
+    }
+    else if (title || name) {
+      selectSort.value = sort;
+      textSearchInput.value = title || name;
+      collectionFetch(selectType);
+    }
+    else {
+      collectionFetch(selectType);
+    };
+  };  
+};
+
+const saveFetchInfo = (collection, id, secondCollection, sort = false, inputText = false) => {
+
+  fetchInfo.url.collection = collection;
+  fetchInfo.url.id = id;
+  fetchInfo.url.secondCollection = secondCollection;
+
+  if (sort && inputText) {
+    if (collection === 'comics') {
+      fetchInfo.query.sort = sort;
+      fetchInfo.query.title = inputText;
+    }
+    else {
+      fetchInfo.query.sort = sort;
+      fetchInfo.query.name = inputText;
+    };
+  };  
+  sessionStorage.setItem('fetchInfo', JSON.stringify(fetchInfo));
+};
+
 const saveDarkMode = boolean => {
   theme.hasDarkMode = boolean;
   localStorage.setItem('theme', JSON.stringify(theme));
@@ -209,7 +250,10 @@ const removeDarkMode = () => {
   saveDarkMode(false);
 }
 
-const resetOffset = () => currentPage = 0;
+const resetOffset = () => {
+  currentPage = 0;
+  offset = 0;
+};
 
 const offsetNumber = (currentPage, resultsPerPage) => offset = currentPage * resultsPerPage;
 
@@ -331,7 +375,9 @@ const showCharacters = (data, secondCollection) => {
   charactersCards.forEach(singleCard => {
     singleCard.onclick = () => {
       let characterId = singleCard.dataset.id;
+      console.log(offset);
       resetOffset();
+      console.log(offset);
       singleResultFetch('characters', characterId);        
     };
   });
@@ -354,6 +400,7 @@ const showOneComic = (data, id) => {
   createComicSection(info, noInfo, authors, dateSale);
   resetOffset();
   console.log('Estar por hacer collectionFetch desde showOneComic')
+  saveFetchInfo('comics', id, 'characters');
   collectionFetch('comics', id, 'characters');
   });
 };
@@ -368,6 +415,7 @@ const showOneCharacter = (data, id) => {
   });
   resetOffset();
   console.log('estas por hacer un fetch a collectionFetch desde showOneCharacter')
+  saveFetchInfo('characters', id, 'comics');
   collectionFetch('characters', id, 'comics');
 }
 
@@ -403,8 +451,7 @@ showLoader(loaderOverlay, mainSection);
 collectionFetch(selectType);
 
 // Check Dark Mode //
-let themeSaved = localStorage.getItem('theme');
-themeSaved = JSON.parse(themeSaved);
+let themeSaved = JSON.parse(localStorage.getItem('theme'));
 if (themeSaved.hasDarkMode) {
   addDarkMode();
 }

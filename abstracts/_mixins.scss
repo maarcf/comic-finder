@@ -8,6 +8,11 @@
   width: $width;
   margin: $card-margin;
   cursor: pointer;
+  outline: none;
+
+  &:focus {
+    box-shadow: 0 0 20px 5px $detail-color;
+  }
 }
 
 @mixin card-img ($width, $height, $transform) {
