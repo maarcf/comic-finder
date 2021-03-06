@@ -1,7 +1,9 @@
 .pagination-container {
   display: flex;
+  flex-direction: column;
   width: 200px;
   align-self: center;
+  
 
   ul {
     @extend %flex-space-between-center;
@@ -20,5 +22,11 @@
         }
       }
     }
+  }
+
+  p {
+    @extend %secondary-typography-style;
+    align-self: center;
+    margin-top: 20px;
   }
 }

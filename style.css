@@ -5,7 +5,7 @@
   align-items: center;
 }
 
-.search-form .selects-options label, main .total-results, .container-dark-mode p {
+.search-form .selects-options label, .pagination-container p, main .total-results, .container-dark-mode p {
   font-size: 14px;
   color: #757575;
   font-weight: 700;
@@ -47,9 +47,13 @@ body {
 .dark-mode p {
   color: #C3CBD4;
 }
-.dark-mode input[type=search] {
+.dark-mode input[type=search], .dark-mode input[type=search]::placeholder {
   background-color: #2F3437;
   transition: 0.4s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+  color: #C3CBD4;
+}
+.dark-mode .selects-options label {
+  color: #C3CBD4;
 }
 .dark-mode button {
   border: 1px solid #E8E8E8;
@@ -112,7 +116,7 @@ body {
   outline: none;
 }
 .comic-card:focus {
-  box-shadow: 0 0 20px 5px #ed1d23;
+  box-shadow: 0 0 8px 3px #ed1d23;
 }
 .comic-card .comic-img-container {
   margin-bottom: 20px;
@@ -153,7 +157,7 @@ body {
   outline: none;
 }
 .character-card:focus {
-  box-shadow: 0 0 20px 5px #ed1d23;
+  box-shadow: 0 0 8px 3px #ed1d23;
 }
 .character-card .character-img-container {
   border-bottom: 4px solid #ed1d23;
@@ -267,7 +271,7 @@ body {
 .container-dark-mode .dark-mode-button[aria-checked=true] {
   background-color: #04ad50;
 }
-.container-dark-mode .dark-mode-button[aria-checked=true]::after {
+.container-dark-mode .dark-mode-button[aria-checked=true]::before {
   content: "ON";
   font-size: 10px;
   position: absolute;
@@ -354,6 +358,7 @@ main .title-container {
 
 .pagination-container {
   display: flex;
+  flex-direction: column;
   width: 200px;
   align-self: center;
 }
@@ -370,6 +375,10 @@ main .title-container {
 }
 .pagination-container ul li .pagination i {
   color: #ffffff;
+}
+.pagination-container p {
+  align-self: center;
+  margin-top: 20px;
 }
 
 .search-form {

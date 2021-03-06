@@ -20,9 +20,14 @@ body {
     color: $dark-mode-secondary-color;
   }
 
-  input[type=search] {
+  input[type=search], input[type=search]::placeholder {
     background-color: $dark-mode-background-color;
-    transition: $dark-mode-transition
+    transition: $dark-mode-transition;
+    color: $dark-mode-secondary-color;
+  }
+
+  .selects-options label {
+    color: $dark-mode-secondary-color;
   }
 
   button {

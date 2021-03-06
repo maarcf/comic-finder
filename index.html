@@ -31,8 +31,8 @@
       <h2>Búsqueda</h2>
     
       <div class="container-dark-mode">
-        <p>Modo Oscuro</p>
-        <button class="dark-mode-button" role="switch" aria-checked="false">
+        <p aria-hidden="true">Modo Oscuro</p>
+        <button class="dark-mode-button" role="switch" aria-label="Modo Oscuro" aria-checked="false">
           <span></span>
         </button>
       </div>
@@ -102,11 +102,12 @@
           </button>
         </li>
         <li>
-          <button id="last-page" class="pagination button" aria-label="Ir a la última página">
+          <button id="last-page-btn" class="pagination button" aria-label="Ir a la última página">
             <i class="fas fa-angle-double-right" aria-hidden="true"></i>
           </button>
         </li>
       </ul>
+      <p>Página <span id="current-page">1</span> de <span id="last-page">1</span> </p>
     </nav>
 
     <div class="overlay hidden" role="alertdialog" aria-modal="true" aria-label="Cargando resultados...">

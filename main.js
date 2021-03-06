@@ -6,7 +6,7 @@ const loaderOverlay = document.querySelector('.overlay');
 const firstPageButton = document.querySelector('#first-page');
 const previousPageButton = document.querySelector('#previous-page');
 const nextPageButton = document.querySelector('#next-page');
-const lastPageButton = document.querySelector('#last-page');
+const lastPageButton = document.querySelector('#last-page-btn');
 const searchForm = document.querySelector('#search-form');
 const textSearchInput = document.querySelector('#search-input');
 const selectType = document.querySelector('#search-type');
@@ -15,6 +15,8 @@ const labelSort = selectSort.parentElement;
 const titleResults = document.querySelector('#title-results-section');
 const darkModeButton = document.querySelector('.dark-mode-button');
 const spanInside = darkModeButton.children[0];
+const currentPageHTML = document.querySelector('#current-page');
+const lastPageHTML = document.querySelector('#last-page');
 
 // JS Variables //
 let url = '';
@@ -146,9 +148,8 @@ searchForm.onsubmit = e => {
   let type = selectType.value;
   let sort = selectSort.value;
   let inputText = textSearchInput.value;
-  sessionStorage.clear();
   saveFetchInfo(type, '', '', sort, inputText);  
-  showInfo();
+  displayInfo();
 };
 
 darkModeButton.onclick = e => {
@@ -156,38 +157,44 @@ darkModeButton.onclick = e => {
   isChecked ? addDarkMode() : removeDarkMode();
 };
 
-
 // Pagination //
 firstPageButton.onclick = () => {
   resetOffset();
   offsetNumber(currentPage, resultsPerPage);
-  showInfo();
+  displayInfo();
 };
 
 previousPageButton.onclick = () => {
   currentPage--;
   offsetNumber(currentPage, resultsPerPage);
-  showInfo();
+  displayInfo();
 };
 
 nextPageButton.onclick = () => {
   currentPage++;
   offsetNumber(currentPage, resultsPerPage);
-  showInfo();
+  displayInfo();
 };
-
-
 
 lastPageButton.onclick = () => {
   let remainder = totalCount % resultsPerPage;
   currentPage = remainder ? (totalCount - remainder) / resultsPerPage : (totalCount / resultsPerPage) - 1;
   offsetNumber(currentPage, resultsPerPage);
-  showInfo();
+  displayInfo();
 };
 
 // Other Fuctions //
-const showInfo = () => {
-  fetchJSON = JSON.parse(sessionStorage.getItem('fetchInfo'));
+const updatePagesInfo = () => {
+  let currPage = currentPage + 1;  
+  let lastPage = Math.ceil(totalCount / resultsPerPage);
+  currentPageHTML.textContent = currPage;
+  lastPageHTML.textContent = lastPage;
+  previousPageButton.setAttribute('aria-label', `Ir a la página ${currPage - 1}`);
+  nextPageButton.setAttribute('aria-label', `Ir a la página ${currPage + 1}`);
+};
+
+const displayInfo = () => {
+  const fetchJSON = JSON.parse(sessionStorage.getItem('fetchInfo'));
   console.log('soy fetchJSON', fetchJSON)
   if (!fetchJSON) {
     collectionFetch(selectType);
@@ -210,13 +217,21 @@ const showInfo = () => {
       collectionFetch(selectType);
     };
   };  
+
+  // Check Dark Mode //
+  const themeSaved = JSON.parse(localStorage.getItem('theme'));
+  themeSaved.hasDarkMode && addDarkMode();
 };
 
 const saveFetchInfo = (collection, id, secondCollection, sort = false, inputText = false) => {
-
   fetchInfo.url.collection = collection;
   fetchInfo.url.id = id;
   fetchInfo.url.secondCollection = secondCollection;
+
+  if (!inputText) {
+    fetchInfo.query.title = inputText;
+    fetchInfo.query.name = inputText;
+  };
 
   if (sort && inputText) {
     if (collection === 'comics') {
@@ -234,21 +249,21 @@ const saveFetchInfo = (collection, id, secondCollection, sort = false, inputText
 const saveDarkMode = boolean => {
   theme.hasDarkMode = boolean;
   localStorage.setItem('theme', JSON.stringify(theme));
-}
+};
 
 const addDarkMode = () => {
   document.body.classList.add('dark-mode');
   darkModeButton.setAttribute('aria-checked', true);
   spanInside.style.transform = 'translateX(0)';
   saveDarkMode(true);
-}
+};
 
 const removeDarkMode = () => {
   document.body.classList.remove('dark-mode');
   darkModeButton.setAttribute('aria-checked', false);
   spanInside.style.transform = 'translateX(-25px)';
   saveDarkMode(false);
-}
+};
 
 const resetOffset = () => {
   currentPage = 0;
@@ -257,11 +272,7 @@ const resetOffset = () => {
 
 const offsetNumber = (currentPage, resultsPerPage) => offset = currentPage * resultsPerPage;
 
-const noResults = result => {
-  if (result.length === 0) {
-    mainSection.innerHTML = `<h3>No se han encontrado resultados<h3>`;
-  };
-};
+const noResults = result => result.length === 0 && (mainSection.innerHTML = `<h3>No se han encontrado resultados<h3>`);
 
 const updatePaginationButtonsAttribute = () => {
   if (currentPage === 0) {
@@ -296,7 +307,7 @@ const createURL = (collection = 'comics', id = false, secondCollection = false) 
 
     if (secondCollection) {
       url += `/${secondCollection}`;        
-    }
+    };
     console.log('LA URL FINAL ES: ', url + queryParam);
     return url + queryParam;
   }
@@ -318,11 +329,7 @@ const createQueryParam = boolean => {
 
   queryParam = `?apikey=${apiKey}&offset=${offNum}`;
   
-  if (type === 'comics' && boolean) {
-    queryParam += `&orderBy=${sort}`;
-  };
-
-  if (type === 'characters' && boolean) {
+  if ((type === 'comics' || type === 'characters') && boolean) {
     queryParam += `&orderBy=${sort}`;
   };
 
@@ -335,7 +342,7 @@ const createQueryParam = boolean => {
 };
 
 // Display Comics and Characters //
-const showComics = (data, secondCollection) => {
+const showComics = (data, secondCollection = false) => {
 
   let comics = data.data.results;
   totalCount = data.data.total;
@@ -345,6 +352,7 @@ const showComics = (data, secondCollection) => {
   createComicsCards(comics);
   hideLoader(loaderOverlay, mainSection);
   noResults(comics);
+  updatePagesInfo();
   updatePaginationButtonsAttribute();
 
   const comicsCards = document.querySelectorAll('.comic-card');
@@ -357,7 +365,7 @@ const showComics = (data, secondCollection) => {
   });
 };
 
-const showCharacters = (data, secondCollection) => {
+const showCharacters = (data, secondCollection = false) => {
 
   let characters = data.data.results;
   totalCount = data.data.total;
@@ -367,6 +375,7 @@ const showCharacters = (data, secondCollection) => {
   createCharactersCards(characters);  
   hideLoader(loaderOverlay, mainSection);
   noResults(characters);
+  updatePagesInfo();
   updatePaginationButtonsAttribute();
 
   const charactersCards = document.querySelectorAll('.character-card');
@@ -421,7 +430,7 @@ const collectionFetch = (collection, id, secondCollection) => {
   })
   .then(data => {
     if (id) {
-      secondCollection === 'comics' ? showComics(data, secondCollection) : showCharacters(data,secondCollection);
+      secondCollection === 'comics' ? showComics(data, secondCollection) : showCharacters(data, secondCollection);
     }
     else {
       `${type || collection}` === 'comics' ? showComics(data) : showCharacters(data);
@@ -440,10 +449,4 @@ const singleResultFetch = (collection, id) => {
 
 // Start page //
 showLoader(loaderOverlay, mainSection);
-collectionFetch(selectType);
-
-// Check Dark Mode //
-let themeSaved = JSON.parse(localStorage.getItem('theme'));
-if (themeSaved.hasDarkMode) {
-  addDarkMode();
-}
+displayInfo();
