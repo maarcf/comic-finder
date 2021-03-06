@@ -16,8 +16,7 @@
 
   .search-info {
     flex: 2;
-    display: flex;
-    flex-direction: column;
+    @extend %flex-column;
     p {
       margin: 10px 5px 20px;
     }
