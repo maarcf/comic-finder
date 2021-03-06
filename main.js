@@ -32,6 +32,11 @@ const fetchInfo = {
   url: {},
   query: {}
 };
+let saveURL = '';
+let saveOffset= 0;
+let savePage = 0;
+let returnPage = 0;
+let lastOffset = 0;
 
 
 // Loader //
@@ -103,6 +108,7 @@ const createComicSection = (info, noInfo, authors, dateSale) => {
     <p>${authors.join(', ') || noInfo}</p>
     <h3>Descripción:</h3>
     <p>${info.description || noInfo}</p>
+    <p id="return" role="button" class="return">Volver a atrás</p>
   </div>`;
 };
 
@@ -115,6 +121,7 @@ const createCharacterSection = (info,  noInfo,) => {
     <h2>${info.name}</h2>
     <h3>Descripción:</h3>
     <p>${info.description.trim() || noInfo}</p>
+    <p id="return" role="button" class="return">Volver a atrás</p>
   </div>`;
 };
 
@@ -188,22 +195,20 @@ const updatePagesInfo = () => {
   let currPage = currentPage + 1;  
   let lastPage = Math.ceil(totalCount / resultsPerPage);
   currentPageHTML.textContent = currPage;
-  lastPageHTML.textContent = lastPage;
+  lastPageHTML.textContent = `${lastPage !== 0 ? lastPage : 1}`;
   previousPageButton.setAttribute('aria-label', `Ir a la página ${currPage - 1}`);
   nextPageButton.setAttribute('aria-label', `Ir a la página ${currPage + 1}`);
 };
 
 const displayInfo = () => {
   const fetchJSON = JSON.parse(sessionStorage.getItem('fetchInfo'));
-  console.log('soy fetchJSON', fetchJSON)
+  
   if (!fetchJSON) {
     collectionFetch(selectType);
   }
   else {
     const { collection, id, secondCollection } = fetchJSON.url;
     const { sort, title, name } = fetchJSON.query;
-    console.log(collection, id, secondCollection);
-    console.log(sort, title, name);
 
     if (id) {
       collectionFetch(collection, id, secondCollection);
@@ -227,7 +232,7 @@ const saveFetchInfo = (collection, id, secondCollection, sort = false, inputText
   fetchInfo.url.collection = collection;
   fetchInfo.url.id = id;
   fetchInfo.url.secondCollection = secondCollection;
-
+  
   if (!inputText) {
     fetchInfo.query.title = inputText;
     fetchInfo.query.name = inputText;
@@ -308,14 +313,12 @@ const createURL = (collection = 'comics', id = false, secondCollection = false) 
     if (secondCollection) {
       url += `/${secondCollection}`;        
     };
-    console.log('LA URL FINAL ES: ', url + queryParam);
     return url + queryParam;
   }
   else {
-    console.log('No hay id por eso tiene otros parametros a sumarse')
     hasOthersQueriesParam = true;
     queryParam = createQueryParam(hasOthersQueriesParam);
-    console.log('LA URL FINAL ES: ', url + queryParam);
+    saveURL = url + queryParam;
     return url + queryParam;
   };
 };
@@ -346,7 +349,9 @@ const showComics = (data, secondCollection = false) => {
 
   let comics = data.data.results;
   totalCount = data.data.total;
-  secondCollection ? titleResults.textContent = 'Comics' : titleResults.textContent = 'Resultados';
+  secondCollection 
+  ? titleResults.textContent = 'Comics' 
+  : titleResults.textContent = 'Resultados';
   totalResults.textContent = `${totalCount} RESULTADOS`;
 
   createComicsCards(comics);
@@ -354,6 +359,8 @@ const showComics = (data, secondCollection = false) => {
   noResults(comics);
   updatePagesInfo();
   updatePaginationButtonsAttribute();
+  saveOffset = offset;
+  savePage = currentPage;
 
   const comicsCards = document.querySelectorAll('.comic-card');
   comicsCards.forEach(singleCard => {
@@ -370,13 +377,17 @@ const showCharacters = (data, secondCollection = false) => {
   let characters = data.data.results;
   totalCount = data.data.total;
   totalResults.textContent = `${totalCount} RESULTADOS`;
-  secondCollection ? titleResults.textContent = 'Personajes' : titleResults.textContent = 'Resultados';
+  secondCollection 
+  ? titleResults.textContent = 'Personajes' 
+  : titleResults.textContent = 'Resultados';
 
   createCharactersCards(characters);  
   hideLoader(loaderOverlay, mainSection);
   noResults(characters);
   updatePagesInfo();
   updatePaginationButtonsAttribute();
+  saveOffset = offset;
+  savePage = currentPage;
 
   const charactersCards = document.querySelectorAll('.character-card');
   charactersCards.forEach(singleCard => {
@@ -401,9 +412,10 @@ const showOneComic = (data, id) => {
   dateSale = new Date(dateSale.date).toLocaleDateString();
 
   createComicSection(info, noInfo, authors, dateSale);
-  resetOffset();
-  console.log('Estar por hacer collectionFetch desde showOneComic')
   saveFetchInfo('comics', id, 'characters');
+  returnPage = savePage;
+  lastOffset = saveOffset;
+  resetOffset();  
   collectionFetch('comics', id, 'characters');
   });
 };
@@ -414,23 +426,26 @@ const showOneCharacter = (data, id) => {
   character.map(info => {
     createCharacterSection(info, noInfo);      
   });
-  resetOffset();
-  console.log('estas por hacer un fetch a collectionFetch desde showOneCharacter')
   saveFetchInfo('characters', id, 'comics');
+  returnPage = savePage;
+  lastOffset = saveOffset;
+  resetOffset();
   collectionFetch('characters', id, 'comics');
 }
 
 // Fetchs //
-const collectionFetch = (collection, id, secondCollection) => {  
+const collectionFetch = (collection, id, secondCollection, url) => {  
   let type = collection.value;
-  fetch(createURL(collection, id, secondCollection))
+  fetch(url ? url : createURL(collection, id, secondCollection))
   .then(res => {
     showLoader(loaderOverlay, mainSection);
     return res.json();
   })
   .then(data => {
     if (id) {
-      secondCollection === 'comics' ? showComics(data, secondCollection) : showCharacters(data, secondCollection);
+      secondCollection === 'comics' 
+      ? showComics(data, secondCollection) 
+      : showCharacters(data, secondCollection);
     }
     else {
       `${type || collection}` === 'comics' ? showComics(data) : showCharacters(data);
@@ -444,7 +459,18 @@ const singleResultFetch = (collection, id) => {
     showLoader(loaderOverlay, mainSection);
     return res.json();
   })
-  .then(data => collection === 'comics' ? showOneComic(data, id) : showOneCharacter(data, id));
+  .then(data => {
+    collection === 'comics' ? showOneComic(data, id) : showOneCharacter(data, id);
+
+    const returnToPage = document.querySelector('#return');
+    returnToPage.onclick = () => {
+      sessionStorage.clear();
+      cleanSection(singleResultSection);
+      collectionFetch(selectType, '', '', saveURL);
+      offset = lastOffset;
+      currentPage = returnPage;
+    };
+  });
 };
 
 // Start page //

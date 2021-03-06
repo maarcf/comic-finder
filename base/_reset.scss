@@ -16,17 +16,13 @@ body {
   color: $dark-mode-main-color;
   transition: $dark-mode-transition;
  
-  p {
+  p,.selects-options label, .search-info .back {
     color: $dark-mode-secondary-color;
   }
 
   input[type=search], input[type=search]::placeholder {
     background-color: $dark-mode-background-color;
     transition: $dark-mode-transition;
-    color: $dark-mode-secondary-color;
-  }
-
-  .selects-options label {
     color: $dark-mode-secondary-color;
   }
 
