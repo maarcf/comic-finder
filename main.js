@@ -231,7 +231,9 @@ const displayInfo = () => {
 
   // Check Dark Mode //
   const themeSaved = JSON.parse(localStorage.getItem('theme'));
-  themeSaved.hasDarkMode && addDarkMode();
+  if (themeSaved) {
+    themeSaved.hasDarkMode && addDarkMode();
+  };
 };
 
 const saveFetchInfo = (collection, id, secondCollection, sort = false, inputText = false) => {
