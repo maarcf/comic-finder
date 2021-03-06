@@ -2,7 +2,7 @@
 ### Español
 Hola, soy Mariana. :wave:
 
-Estoy estudiando **Desarrollo Web FrontEnd** en *[ADA ITW](https://adaitw.org/)* y este es el quinto proyecto del curso (el primero con API).
+Estoy estudiando **Desarrollo Web FrontEnd** en *[ADA ITW](https://adaitw.org/)*. Este es el quinto proyecto del curso y el primero usando API.
 
 #### Tecnologías
 El proyecto está hecho con HTML 5, SASS y JavaScript. 

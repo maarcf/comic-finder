@@ -27,7 +27,7 @@ const resultsPerPage = 20;
 let currentPage = 0;
 let totalCount = 0;
 let offset = 0;
-const theme = {};
+const theme = {hasDarkMode: false};
 const fetchInfo = {
   url: {},
   query: {}
@@ -169,18 +169,21 @@ firstPageButton.onclick = () => {
   resetOffset();
   offsetNumber(currentPage, resultsPerPage);
   displayInfo();
+  setTimeout(goToTop, 1200);  
 };
 
 previousPageButton.onclick = () => {
   currentPage--;
   offsetNumber(currentPage, resultsPerPage);
   displayInfo();
+  setTimeout(goToTop, 1200);  
 };
 
-nextPageButton.onclick = () => {
+nextPageButton.onclick = (e) => {
   currentPage++;
   offsetNumber(currentPage, resultsPerPage);
   displayInfo();
+  setTimeout(goToTop, 1200);  
 };
 
 lastPageButton.onclick = () => {
@@ -188,9 +191,12 @@ lastPageButton.onclick = () => {
   currentPage = remainder ? (totalCount - remainder) / resultsPerPage : (totalCount / resultsPerPage) - 1;
   offsetNumber(currentPage, resultsPerPage);
   displayInfo();
+  setTimeout(goToTop, 1200);  
 };
 
 // Other Fuctions //
+const goToTop = () => window.scroll({top: 450});
+
 const updatePagesInfo = () => {
   let currPage = currentPage + 1;  
   let lastPage = Math.ceil(totalCount / resultsPerPage);
@@ -367,7 +373,8 @@ const showComics = (data, secondCollection = false) => {
     singleCard.onclick = () => {
       let comicId = singleCard.dataset.id;
       resetOffset();
-      singleResultFetch('comics', comicId);        
+      singleResultFetch('comics', comicId);
+      setTimeout(goToTop, 1200);       
     };
   });
 };
@@ -394,7 +401,8 @@ const showCharacters = (data, secondCollection = false) => {
     singleCard.onclick = () => {
       let characterId = singleCard.dataset.id;
       resetOffset();
-      singleResultFetch('characters', characterId);        
+      singleResultFetch('characters', characterId);
+      setTimeout(goToTop, 1200);    
     };
   });
 };
@@ -467,6 +475,7 @@ const singleResultFetch = (collection, id) => {
       sessionStorage.clear();
       cleanSection(singleResultSection);
       collectionFetch(selectType, '', '', saveURL);
+      setTimeout(goToTop, 1200); 
       offset = lastOffset;
       currentPage = returnPage;
     };
