@@ -45,7 +45,7 @@ body {
   color: #E8E8E8;
   transition: 0.4s cubic-bezier(0.55, 0.06, 0.68, 0.19);
 }
-.dark-mode p, .dark-mode .selects-options label, .dark-mode .search-info .back {
+.dark-mode p, .dark-mode .selects-options label, .dark-mode .search-info .return {
   color: #C3CBD4;
 }
 .dark-mode input[type=search], .dark-mode input[type=search]::placeholder {
