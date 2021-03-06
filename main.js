@@ -27,7 +27,7 @@ const resultsPerPage = 20;
 let currentPage = 0;
 let totalCount = 0;
 let offset = 0;
-const theme = {hasDarkMode: false};
+const theme = {};
 const fetchInfo = {
   url: {},
   query: {}
