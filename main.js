@@ -29,7 +29,7 @@ const resultsPerPage = 20;
 let currentPage = 0;
 let totalCount = 0;
 let offset = 0;
-const theme = {hasDarkMode: false};
+const theme = {};
 const fetchInfo = {
   url: {},
   query: {}
@@ -171,21 +171,21 @@ firstPageButton.onclick = () => {
   resetOffset();
   offsetNumber(currentPage, resultsPerPage);
   displayInfo();
-  setTimeout(goToTop, 1200);  
+  setTimeout(scrollToTop, 1200);  
 };
 
 previousPageButton.onclick = () => {
   currentPage--;
   offsetNumber(currentPage, resultsPerPage);
   displayInfo();
-  setTimeout(goToTop, 1200);  
+  setTimeout(scrollToTop, 1200);  
 };
 
-nextPageButton.onclick = (e) => {
+nextPageButton.onclick = () => {
   currentPage++;
   offsetNumber(currentPage, resultsPerPage);
   displayInfo();
-  setTimeout(goToTop, 1200);  
+  setTimeout(scrollToTop, 1200);  
 };
 
 lastPageButton.onclick = () => {
@@ -193,7 +193,7 @@ lastPageButton.onclick = () => {
   currentPage = remainder ? (totalCount - remainder) / resultsPerPage : (totalCount / resultsPerPage) - 1;
   offsetNumber(currentPage, resultsPerPage);
   displayInfo();
-  setTimeout(goToTop, 1200);  
+  setTimeout(scrollToTop, 1200);  
 };
 
 choosePage.oninput = () => {
@@ -202,7 +202,7 @@ choosePage.oninput = () => {
 }
 
 // Other Fuctions //
-const goToTop = () => window.scroll({top: 450});
+const scrollToTop = () => window.scroll({top: 450});
 
 const selectPage = () => { 
   choosePage.innerHTML = '';
@@ -251,7 +251,7 @@ const displayInfo = () => {
   const themeSaved = JSON.parse(localStorage.getItem('theme'));
   if (themeSaved) {
     themeSaved.hasDarkMode && addDarkMode();
-  }
+  };
 };
 
 const saveFetchInfo = (collection, id, secondCollection, sort = false, inputText = false) => {
@@ -395,7 +395,7 @@ const showComics = (data, secondCollection = false) => {
       let comicId = singleCard.dataset.id;
       resetOffset();
       singleResultFetch('comics', comicId);
-      setTimeout(goToTop, 1200);       
+      setTimeout(scrollToTop, 1200);       
     };
   });
 };
@@ -424,7 +424,7 @@ const showCharacters = (data, secondCollection = false) => {
       let characterId = singleCard.dataset.id;
       resetOffset();
       singleResultFetch('characters', characterId);
-      setTimeout(goToTop, 1200);    
+      setTimeout(scrollToTop, 1200);    
     };
   });
 };
@@ -461,7 +461,7 @@ const showOneCharacter = (data, id) => {
   lastOffset = saveOffset;
   resetOffset();
   collectionFetch('characters', id, 'comics');
-}
+};
 
 // Fetchs //
 const collectionFetch = (collection, id, secondCollection, url) => {  
@@ -497,7 +497,7 @@ const singleResultFetch = (collection, id) => {
       sessionStorage.clear();
       cleanSection(singleResultSection);
       collectionFetch(selectType, '', '', saveURL);
-      setTimeout(goToTop, 1200); 
+      setTimeout(scrollToTop, 1200); 
       offset = lastOffset;
       currentPage = returnPage;
     };
