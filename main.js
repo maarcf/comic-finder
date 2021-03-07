@@ -198,8 +198,9 @@ lastPageButton.onclick = () => {
 
 choosePage.oninput = () => {
   currentPage = Number(choosePage.value);
+  offsetNumber(currentPage, resultsPerPage);
   displayInfo();
-}
+};
 
 // Other Fuctions //
 const scrollToTop = () => window.scroll({top: 450});

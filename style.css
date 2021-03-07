@@ -390,6 +390,10 @@ main .title-container {
   align-self: center;
   margin-top: 20px;
 }
+.pagination-container .choose-page {
+  align-self: center;
+  margin-top: 10px;
+}
 
 .search-form {
   justify-content: space-between;
