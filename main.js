@@ -17,6 +17,8 @@ const darkModeButton = document.querySelector('.dark-mode-button');
 const spanInside = darkModeButton.children[0];
 const currentPageHTML = document.querySelector('#current-page');
 const lastPageHTML = document.querySelector('#last-page');
+const choosePage = document.querySelector('#choose-page');
+
 
 // JS Variables //
 let url = '';
@@ -194,8 +196,23 @@ lastPageButton.onclick = () => {
   setTimeout(goToTop, 1200);  
 };
 
+choosePage.oninput = () => {
+  currentPage = Number(choosePage.value);
+  displayInfo();
+}
+
 // Other Fuctions //
 const goToTop = () => window.scroll({top: 450});
+
+const selectPage = () => { 
+  choosePage.innerHTML = '';
+  let lastPage = Math.ceil(totalCount / resultsPerPage);
+  for (let i = 0; i < lastPage; i++) {
+    choosePage.innerHTML += `
+    <option value="${i}"> Página ${i + 1}</option>
+    `
+  };
+};
 
 const updatePagesInfo = () => {
   let currPage = currentPage + 1;  
@@ -203,7 +220,8 @@ const updatePagesInfo = () => {
   currentPageHTML.textContent = currPage;
   lastPageHTML.textContent = `${lastPage !== 0 ? lastPage : 1}`;
   previousPageButton.setAttribute('aria-label', `Ir a la página ${currPage - 1}`);
-  nextPageButton.setAttribute('aria-label', `Ir a la página ${currPage + 1}`);
+  nextPageButton.setAttribute('aria-label', `Ir a la página ${currPage + 1}`);  
+  choosePage.children[currentPage].selected = true;
 };
 
 const displayInfo = () => {
@@ -231,7 +249,9 @@ const displayInfo = () => {
 
   // Check Dark Mode //
   const themeSaved = JSON.parse(localStorage.getItem('theme'));
-  themeSaved.hasDarkMode && addDarkMode();
+  if (themeSaved) {
+    themeSaved.hasDarkMode && addDarkMode();
+  }
 };
 
 const saveFetchInfo = (collection, id, secondCollection, sort = false, inputText = false) => {
@@ -363,6 +383,7 @@ const showComics = (data, secondCollection = false) => {
   createComicsCards(comics);
   hideLoader(loaderOverlay, mainSection);
   noResults(comics);
+  selectPage();
   updatePagesInfo();
   updatePaginationButtonsAttribute();
   saveOffset = offset;
@@ -391,6 +412,7 @@ const showCharacters = (data, secondCollection = false) => {
   createCharactersCards(characters);  
   hideLoader(loaderOverlay, mainSection);
   noResults(characters);
+  selectPage();
   updatePagesInfo();
   updatePaginationButtonsAttribute();
   saveOffset = offset;
