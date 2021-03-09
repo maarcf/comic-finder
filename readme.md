@@ -12,7 +12,7 @@ El proyecto está hecho con HTML 5, SASS y JavaScript.
 - :small_orange_diamond: Diseño Responsivo.
 - :small_orange_diamond: GIT.
 - :small_orange_diamond: Programación Funcional.
-- :small_orange_diamond: API RESTful.
+- :small_orange_diamond: API REST.
 - :small_orange_diamond: sessionStorage y localStorage.
 
 ### :sparkles: [Mira el proyecto](https://maarcf.github.io/comic-finder/) :sparkles:
@@ -41,7 +41,7 @@ This project was built with HTML 5, SASS y JavaScript.
 - :small_orange_diamond: Responsive Design.
 - :small_orange_diamond: GIT.
 - :small_orange_diamond: Functional Programming.
-- :small_orange_diamond: API RESTful.
+- :small_orange_diamond: API REST.
 - :small_orange_diamond: sessionStorage y localStorage.
 
 ### :sparkles: [See the project](https://maarcf.github.io/comic-finder/) :sparkles:
