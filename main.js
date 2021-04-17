@@ -56,6 +56,14 @@ const hideLoader = (overlay, section) => {
 const cleanSection = section => section.innerHTML = '';
 
 // Disabled and Enabled //
+// Idealmente, los nombres de funciones van a ser siempre verbos. 
+// disableButton, por ejemplo. 
+// Nombres como "isDisabled" los reservamos para variables de tipo boolean
+// const isDisabled = button.disabled
+// Una regla rapida para los nombres es:
+// - funciones incluyen verbos (e idealmente comienzan con un verbo): getItem, setItem, makeItem
+// - variables de elementos de HTML son sustantivos: priceSection, productCard
+// - booleanos empiezan con is: isDisabled, isHidden
 const isDisabled = button => {
   button.disabled = true;
   button.children[0].style.color = '#757575';
@@ -96,6 +104,14 @@ const createComicsCards = comics => {
 };
 
 const createComicSection = (info, noInfo, authors, dateSale) => {
+  // Me siento mal mencionandote el alt, porque se nota que le pusiste esfuerzo, 
+  // pero la persona ya sabe que esta buscando personajes o comics, y ademas 
+  // tiene un titulo que se lo dice. Imaginate escuchar la voz mecanica del lector
+  // de pantalla diciendo "Personaje de marvel Spider-Man personaje de marvel Hulk 
+  // personaje de marvel Captain America"... se vuelve hartante muy pronto. 
+  // Asi como no agregamos informacion inutil en nuestra parte visual, 
+  // tampoco la agregamos en accesibilidad: con el nombre del personaje 
+  // o el titulo del comic basta y sobra
   singleResultSection.innerHTML = `
   <div class="search-img-container">
     <img src="${info.thumbnail.path}.${info.thumbnail.extension}" alt="Portada del Comic: ${info.title}">
@@ -159,6 +175,7 @@ searchForm.onsubmit = e => {
   displayInfo();
 };
 
+// Ver mis comentarios sobre este problema. 
 darkModeButton.onclick = e => {
   let isChecked = e.target.getAttribute('aria-checked');
   isChecked ? addDarkMode() : removeDarkMode();
@@ -169,6 +186,7 @@ firstPageButton.onclick = () => {
   resetOffset();
   offsetNumber(currentPage, resultsPerPage);
   displayInfo();
+  // te AMO por este scrollToTop
   setTimeout(scrollToTop, 1200);  
 };
 
@@ -207,6 +225,8 @@ const updatePagesInfo = () => {
 };
 
 const displayInfo = () => {
+  // Me intriga un poco el uso de sessionStorage aqui. Lo entiendo para modo oscuro
+  // y modo claro, pero es necesario para esto? Por que no una variable global?
   const fetchJSON = JSON.parse(sessionStorage.getItem('fetchInfo'));
   
   if (!fetchJSON) {
