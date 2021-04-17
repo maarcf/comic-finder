@@ -44,6 +44,8 @@
           <input type="search" placeholder="Ingresá tu búsqueda" name="q" id="search-input"/>
 
           <div class="icon-container">
+            <!-- Privilegia el auto cierre en etiquetas como esta:
+            <i class="fas fa-search" aria-hidden="true" /> -->
             <i class="fas fa-search" aria-hidden="true"></i>
           </div>
         </label>
@@ -88,6 +90,7 @@
     <nav class="pagination-container" aria-label="Paginación">
       <ul>
         <li>
+          <!-- Aria hidden oculta los elementos! Un lector de pantalla no va a ver estos botones! -->
           <button id="first-page" class="pagination button" aria-label="Ir a la primera página">
             <i class="fas fa-angle-double-left" aria-hidden="true"></i>
           </button>
@@ -121,6 +124,8 @@
   <footer>
     <p>Hecho con 💚 por Mariana</p>
     <div class="contact-links">
+      <!-- Si le agregamos aria-hidden="true" a estos elementos, el lector de pantalla no los encuentra! Eso se usa para ocultar 
+      imagenes decorativas, etc, cosas que no suman, pero tus links si que se tienen que poder ver! -->
       <a href="https://www.linkedin.com/in/mariana-cairo/" aria-label="LinkedIn de Mariana"><i class="fab fa-linkedin" aria-hidden="true"></i></a>
       <a href="https://github.com/maarcf" target="_blank" aria-label="GitHub de Mariana"><i class="fab fa-github-square" aria-hidden="true"></i></a>
       <a href="mailto:marr.cairo@gmail.com" target="_blank" aria-label="E-mail de Mariana"><i class="fas fa-envelope" aria-hidden="true"></i></a>
